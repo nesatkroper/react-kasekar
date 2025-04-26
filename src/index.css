@@ -1,0 +1,239 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@100..900&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Poppins";
+  src: url("./assets/fonts/Poppins.ttf") format("truetype");
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Kantumruy";
+  src: url("./assets/fonts/Kantumruy.ttf") format("truetype");
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Fira";
+  src: url("./assets/fonts/FiraCode.ttf") format("truetype");
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Jet";
+  src: url("./assets/fonts/JetBrains.ttf") format("truetype");
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+
+@keyframes dynamic-spin {
+  0% {
+    transform: rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: rotate(180deg) scale(1.05);
+    opacity: 0.8;
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  50% {
+    transform: translateY(-10px) scale(1.2);
+    opacity: 0.7;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.2;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes orbit {
+  0% {
+    transform: rotate(0deg) translateX(10px) rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg) translateX(10px) rotate(-360deg);
+  }
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 262.1 83.3% 57.8%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 262.1 83.3% 57.8%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 263.4 70% 50.4%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 263.4 70% 50.4%;
+  }
+}
+
+@layer components {
+  .bg-checkerboard {
+    background-image: linear-gradient(45deg, #f0f0f0 25%, transparent 25%),
+      linear-gradient(-45deg, #f0f0f0 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #f0f0f0 75%),
+      linear-gradient(-45deg, transparent 75%, #f0f0f0 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+  }
+
+  .dark .bg-checkerboard {
+    background-image: linear-gradient(45deg, #2a2a2a 25%, transparent 25%),
+      linear-gradient(-45deg, #2a2a2a 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #2a2a2a 75%),
+      linear-gradient(-45deg, transparent 75%, #2a2a2a 75%);
+  }
+}
+
+/* @layer base {
+  :root {
+    --background: 0 0% 98%;
+    --foreground: 220 40% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 40% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 40% 10%;
+
+    --primary: 221 85% 53%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 15% 85%;
+    --secondary-foreground: 220 40% 15%;
+
+    --muted: 220 14% 90%;
+    --muted-foreground: 220 10% 35%;
+
+    --accent: 260 80% 65%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 13% 90%;
+    --input: 220 13% 80%;
+    --ring: 221 85% 53%;
+    --radius: 0.5rem;
+
+    --chart-1: 10 80% 55%;
+    --chart-2: 180 70% 45%;
+    --chart-3: 200 50% 30%;
+    --chart-4: 40 80% 55%;
+    --chart-5: 30 85% 60%;
+  }
+
+  .dark {
+    --background: 220 30% 10%;
+    --foreground: 0 0% 95%;
+    --card: 220 40% 12%;
+    --card-foreground: 0 0% 95%;
+    --popover: 220 40% 12%;
+    --popover-foreground: 0 0% 95%;
+
+    --primary: 221 70% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 20% 30%;
+    --secondary-foreground: 0 0% 90%;
+
+    --muted: 220 25% 18%;
+    --muted-foreground: 220 10% 60%;
+
+    --accent: 280 70% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 60% 45%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 25% 18%;
+    --input: 220 25% 18%;
+    --ring: 221 70% 55%;
+
+    --chart-1: 220 75% 55%;
+    --chart-2: 160 65% 40%;
+    --chart-3: 30 85% 50%;
+    --chart-4: 270 70% 55%;
+    --chart-5: 350 75% 50%;
+  }
+} */
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
