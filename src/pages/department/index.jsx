@@ -1,16 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "@/layout/layout";
 import AppDataTable from "@/components/app/table/app-data-table";
-import DepartmentAdd from "./components/department-add";
-import { DepartmentColumns } from "./components/department-columns";
+import DepartmentAdd from "./add";
+import { DepartmentColumns } from "./columns";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  clearCacheAsync,
-  getDepartments,
-} from "@/contexts/reducer/department-slice";
+import { getDepartments } from "@/contexts/reducer/department-slice";
 
 const Department = () => {
   const dispatch = useDispatch();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { data: depData, loading: depLoading } = useSelector(
     (state) => state.departments
   );
@@ -20,7 +18,6 @@ const Department = () => {
   }, [dispatch]);
 
   const refresh = () => {
-    dispatch(clearCacheAsync());
     dispatch(getDepartments({ params: { status: "all" } }));
   };
 
@@ -28,7 +25,9 @@ const Department = () => {
     <Layout>
       <AppDataTable
         data={depData}
-        addElement={<DepartmentAdd />}
+        addElement={
+          <DepartmentAdd isOpen={isDialogOpen} onOpenChange={setIsDialogOpen} />
+        }
         columns={DepartmentColumns()}
         loading={depLoading}
         refresh={refresh}

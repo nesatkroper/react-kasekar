@@ -1,5 +1,5 @@
 import React from "react";
-import DepartmentUpdate from "./department-edit";
+import DepartmentUpdate from "./edit";
 import PropTypes from "prop-types";
 import { generateColumns } from "@/components/app/table/generate-column";
 import { getDepartments } from "@/contexts/reducer/department-slice";

@@ -27,10 +27,6 @@ const PositionAdd = () => {
     memo: "",
   });
 
-  useEffect(() => {
-    dispatch(getDepartments());
-  }, [dispatch]);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const toastId = showToast("Loading...", "info", true, {
@@ -48,7 +44,7 @@ const PositionAdd = () => {
           "New Position Created",
           "Created"
         );
-        if (response.status === 201) {
+        if (response.status === 201)
           showToast(
             `${formData.positionName} Add Successfully.`,
             "success",
@@ -57,7 +53,6 @@ const PositionAdd = () => {
               duration: 5000,
             }
           );
-        }
       }, 100);
 
       resetForm();
@@ -74,6 +69,11 @@ const PositionAdd = () => {
       console.log(e);
     }
   };
+
+  useEffect(() => {
+    dispatch(getDepartments());
+  }, [dispatch]);
+
   return (
     <DialogContent className='max-w-[350px]'>
       <form onSubmit={handleSubmit}>

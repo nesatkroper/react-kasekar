@@ -1,46 +1,8 @@
 import axiosInstance from "@/lib/axios-instance";
-import localForage from "localforage";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getFromCache, saveToCache } from "./cache";
-
-const storage = localForage.createInstance({
-  name: "reserve-cache",
-  storeName: "api_responses",
-  description: "Cached API responses",
-});
-
-const clearCacheItem = async (key) => {
-  try {
-    await storage.removeItem(key);
-  } catch (e) {
-    console.error("Error clearing cache item:", e);
-  }
-};
-
-export const createClearCacheThunk = (prefix) =>
-  createAsyncThunk(`${prefix}/clearCache`, async () => {
-    try {
-      const keys = await storage.keys();
-      await Promise.all(
-        keys.map((key) =>
-          key.startsWith(`${prefix}_`)
-            ? storage.removeItem(key)
-            : Promise.resolve()
-        )
-      );
-    } catch (e) {
-      console.error("Failed to clear cache:", e);
-      throw e;
-    }
-  });
 
 export const createApiThunk = (name, endpoint, options = {}) => {
-  const {
-    cacheEnabled = true,
-    cacheExpiration = 12 * 60 * 60 * 1000,
-    invalidateOnMutation = true,
-    isPrismaEndpoint = false,
-  } = options;
+  const { isPrismaEndpoint = false } = options;
 
   return createAsyncThunk(
     name,
@@ -48,18 +10,6 @@ export const createApiThunk = (name, endpoint, options = {}) => {
       { id, params = {}, payload, method = "GET" } = {},
       { rejectWithValue }
     ) => {
-      const cacheKey = `${name}_${id || ""}_${JSON.stringify(params)}`;
-
-      if (cacheEnabled && method === "GET") {
-        const cachedData = await getFromCache(cacheKey);
-        if (
-          cachedData &&
-          Date.now() - cachedData.lastFetched < cacheExpiration
-        ) {
-          return cachedData.data;
-        }
-      }
-
       try {
         let response;
         const queryParams = new URLSearchParams(params).toString();
@@ -86,9 +36,6 @@ export const createApiThunk = (name, endpoint, options = {}) => {
             break;
           case "DELETE":
             response = await axiosInstance.delete(`${endpoint}/${id}`);
-            if (invalidateOnMutation) {
-              await clearCacheItem(`${name}_data`);
-            }
             break;
           default:
             throw new Error(`Unsupported method: ${method}`);
@@ -117,16 +64,10 @@ export const createApiThunk = (name, endpoint, options = {}) => {
           };
         }
 
-        const result = {
+        return {
           data: Array.isArray(apiData) ? apiData : [apiData],
           meta,
         };
-
-        if (cacheEnabled && method === "GET") {
-          await saveToCache(cacheKey, result);
-        }
-
-        return result;
       } catch (error) {
         return rejectWithValue(error.response?.data || error.message);
       }
@@ -135,8 +76,6 @@ export const createApiThunk = (name, endpoint, options = {}) => {
 };
 
 export const createGenericSlice = (name, apiThunk, initialState = {}) => {
-  const clearCacheThunk = createClearCacheThunk(apiThunk.typePrefix);
-
   const initialCacheState = {
     data: [],
     meta: { total: 0, page: 1, limit: 10, totalPages: 0 },
@@ -169,7 +108,6 @@ export const createGenericSlice = (name, apiThunk, initialState = {}) => {
         state.data = state.data.filter((item) => item.id !== action.payload);
         state.meta.total = Math.max(0, state.meta.total - 1);
       },
-
       updateNestedItem: (state, action) => {
         const { id, path, value } = action.payload;
         const item = state.data.find((item) => item.id === id);
@@ -201,21 +139,9 @@ export const createGenericSlice = (name, apiThunk, initialState = {}) => {
         .addCase(apiThunk.rejected, (state, action) => {
           state.loading = false;
           state.error = action.payload;
-        })
-        .addCase(clearCacheThunk.pending, (state) => {
-          state.loading = true;
-        })
-        .addCase(clearCacheThunk.fulfilled, (state) => {
-          state.loading = false;
-        })
-        .addCase(clearCacheThunk.rejected, (state) => {
-          state.loading = false;
         });
     },
   });
 
-  return {
-    ...slice,
-    clearCacheAsync: clearCacheThunk,
-  };
+  return slice;
 };

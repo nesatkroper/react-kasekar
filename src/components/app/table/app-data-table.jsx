@@ -85,28 +85,34 @@ const rowNumberColumn = {
   enableHiding: false,
 };
 
-const AppDataTable = (props) => {
-  const {
-    data = demo,
-    columns = column,
-    main = "name",
-    addElement = null,
-    title = "Default Title",
-    des = "Default Description",
-    loading = false,
-    refresh,
-  } = props;
-
+const AppDataTable = ({
+  data = demo,
+  columns = column,
+  main = "name",
+  addElement = null,
+  title = "Default Title",
+  des = "Default Description",
+  loading = false,
+  refresh,
+}) => {
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
   const [rowSelection, setRowSelection] = useState({});
+  const [open, setOpen] = useState(false);
   const [t] = useTranslation("admin");
 
   const tableColumns = [rowNumberColumn, ...columns];
   const hasPicture = data.some(
     (d) => "picture" in d || "info.picture" in d || "pictures" in d
   );
+
+  const enhancedAddElement = React.isValidElement(addElement)
+    ? React.cloneElement(addElement, {
+        onSuccess: () => setOpen(false),
+        onOpenChange: (isOpen) => setOpen(isOpen),
+      })
+    : null;
 
   const table = useReactTable({
     data,
@@ -139,8 +145,8 @@ const AppDataTable = (props) => {
   return (
     <motion.div variants={cardVariants} initial='hidden' animate='visible'>
       <Card>
-        <Dialog>
-          {addElement}
+        <Dialog open={open} onOpenChange={setOpen}>
+          {enhancedAddElement}
           <CardHeader className='p-4'>
             <div className='flex flex-row justify-between'>
               <div>

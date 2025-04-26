@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import axiosAuth from "@/lib/axios-auth";
 import { useFormHandler } from "@/hooks/use-form-handler";
@@ -8,18 +8,20 @@ import { Button } from "@/components/ui/button";
 import { useDispatch } from "react-redux";
 import { FormInput, FormTextArea } from "@/components/app/form";
 import {
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogClose,
-} from "@/components/ui/dialog";
-import {
   clearCache,
   getDepartments,
 } from "@/contexts/reducer/department-slice";
+import {
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { toast } from "sonner";
+import { Loader } from "lucide-react";
 
-const DepartmentAdd = () => {
+const DepartmentAdd = ({ onSuccess }) => {
   const dispatch = useDispatch();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { formData, resetForm, handleChange } = useFormHandler({
     departmentName: "",
     memo: "",
@@ -27,27 +29,44 @@ const DepartmentAdd = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.table(formData);
+    setIsSubmitting(true);
+    const toastId = showToast("Loading...", "info", true, {
+      description: "Please wait",
+    });
+
     try {
-      await axiosAuth
-        .post("/department", formData)
-        .then((res) => {
-          console.log(res);
-          showToast(`${formData.departmentName} Add Successfully.`, "success");
-          dispatch(clearCache());
-          resetForm();
-          dispatch(getDepartments({ params: { status: "all" } }));
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      const response = await axiosAuth.post("/department", formData);
+
+      setTimeout(() => {
+        toast.dismiss(toastId);
+
+        if (response.status === 201)
+          showToast(
+            `${formData.departmentName} Add Successfully.`,
+            "success",
+            false,
+            {
+              duration: 5000,
+            }
+          );
+
+        if (onSuccess) onSuccess();
+        setIsSubmitting(false);
+      }, 100);
+
+      resetForm();
+      dispatch(clearCache());
+      dispatch(getDepartments({ params: { status: "all" } }));
     } catch (e) {
+      setIsSubmitting(false);
+      toast.dismiss(toastId);
+      showToast("Failed to add department", "error");
       console.log(e);
     }
   };
 
   return (
-    <DialogContent className='max-w-[350px]'>
+    <DialogContent className='max-w-[350px] p-4'>
       <form onSubmit={handleSubmit}>
         <DialogHeader>
           <DialogTitle className='text-md'>
@@ -72,11 +91,11 @@ const DepartmentAdd = () => {
             placeholder='N/A'
           />
         </div>
-        <DialogClose asChild>
-          <Button type='submit' className='w-full'>
-            Submit
-          </Button>
-        </DialogClose>
+
+        <Button type='submit' disabled={isSubmitting} className='w-full'>
+          {isSubmitting ? <Loader className='animate-spin' /> : ""}
+          Submit
+        </Button>
       </form>
     </DialogContent>
   );
@@ -84,6 +103,7 @@ const DepartmentAdd = () => {
 
 DepartmentAdd.propTypes = {
   lastCode: PropTypes.number,
+  onSuccess: PropTypes.func,
 };
 
 export default DepartmentAdd;

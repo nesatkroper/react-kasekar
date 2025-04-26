@@ -5,11 +5,7 @@ import {
 
 export const getDepartments = createApiThunk(
   "departments/getDepartments",
-  "/department",
-  {
-    cacheEnabled: true,
-    cacheExpiration: 24 * 60 * 60 * 1000,
-  }
+  "/department"
 );
 
 const departmentSlice = createGenericSlice("departments", getDepartments, {
@@ -17,6 +13,5 @@ const departmentSlice = createGenericSlice("departments", getDepartments, {
 });
 
 export default departmentSlice.reducer;
-export const { clearCacheAsync } = departmentSlice;
-export const { clearCache, updateItem, addItem, removeItem } =
+export const { clearCache, updateItem, addItem, removeItem, updateNestedItem } =
   departmentSlice.actions;
