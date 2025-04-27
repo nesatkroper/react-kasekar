@@ -9,7 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { useEffect, useRef, useState } from "react";
 import { Send, ArrowDown, X, EllipsisVertical, Pen, Trash } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { getUser } from "@/contexts/reducer/user-slice";
+import { getUsers } from "@/contexts/reducer/user-slice";
 import { motion, AnimatePresence } from "framer-motion";
 import { groupMessagesByDate } from "./group";
 import { messageVariants, sheetVariants } from "@/constants/variants";
@@ -104,7 +104,7 @@ const GroupChat = ({ onClose }) => {
   const groupedMessages = groupMessagesByDate(messages);
 
   useEffect(() => {
-    dispatch(getUser());
+    dispatch(getUsers());
     fetchOldMessages();
 
     SOCKET.on("receiveGroup", (message) => {

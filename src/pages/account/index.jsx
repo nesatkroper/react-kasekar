@@ -12,14 +12,14 @@ import {
 } from "@/components/ui/alert-dialog";
 import { image } from "@/components/app/sidebar/nav-user";
 import { useDispatch, useSelector } from "react-redux";
-import { getUser } from "@/contexts/reducer/user-slice";
+import { getUsers } from "@/contexts/reducer/user-slice";
 
 const AccountInfo = () => {
   const dispatch = useDispatch();
   const { usrData, usrLoading, usrError } = useSelector((state) => state.user);
 
   useEffect(() => {
-    dispatch(getUser());
+    dispatch(getUsers());
   }, [dispatch]);
 
   if (usrLoading) {

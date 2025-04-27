@@ -1,19 +1,24 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "@/layout/layout";
-import EmployeeAdd from "./components/employee-add";
+import EmployeeAdd from "./add";
 import AppDataTable from "@/components/app/table/app-data-table";
 import { useDispatch, useSelector } from "react-redux";
-import { EmployeeColumns } from "./components/employee-columns";
-import {
-  clearCacheAsync,
-  getEmployees,
-} from "@/contexts/reducer/employee-slice";
+import { EmployeeColumns } from "./columns";
+import { clearCache, getEmployees } from "@/contexts/reducer/employee-slice";
 
 const Employee = () => {
   const dispatch = useDispatch();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { data: empData, loading: empLoading } = useSelector(
     (state) => state?.employees
   );
+
+  const refresh = async () => {
+    dispatch(clearCache());
+    dispatch(
+      getEmployees({ params: { status: "all", info: true, position: true } })
+    );
+  };
 
   useEffect(() => {
     dispatch(
@@ -21,18 +26,13 @@ const Employee = () => {
     );
   }, [dispatch]);
 
-  const refresh = () => {
-    dispatch(clearCacheAsync());
-    dispatch(
-      getEmployees({ params: { status: "all", info: true, position: true } })
-    );
-  };
-
   return (
     <Layout>
       <AppDataTable
         data={empData}
-        addElement={<EmployeeAdd />}
+        addElement={
+          <EmployeeAdd isOpen={isDialogOpen} onOpenChange={setIsDialogOpen} />
+        }
         columns={EmployeeColumns()}
         loading={empLoading}
         title='Employeese'

@@ -1,14 +1,14 @@
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
-import { getCategorys } from "@/contexts/reducer/product-category-slice";
+import { getCategorys } from "@/contexts/reducer/category-slice";
 import { FormComboBox, FormInput } from "@/components/app/form";
 // import { useTranslation } from "react-i18next";
 
 const POSSearch = () => {
   const dispatch = useDispatch();
   // const [t] = useTranslation("admin");
-  const { data: pcaData } = useSelector((state) => state?.pcategories);
+  const { data: pcaData } = useSelector((state) => state?.categories);
 
   useEffect(() => {
     dispatch(getCategorys());

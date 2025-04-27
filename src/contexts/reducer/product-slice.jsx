@@ -7,6 +7,6 @@ export const getProducts = createApiThunk("products/getProducts", "/product");
 
 const productSlice = createGenericSlice("products", getProducts);
 
-export const { clearCache } = productSlice.actions;
-export const { clearCacheAsync } = productSlice;
 export default productSlice.reducer;
+export const { clearCache, updateItem, addItem, removeItem, updateNestedItem } =
+  productSlice.actions;

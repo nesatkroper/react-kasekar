@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from "react";
 import Cookies from "js-cookie";
 import axiosAuth from "@/lib/axios-auth";
-import Invoice from "@/components/app/admin/invoice/invoice";
+import Invoice from "@/components/app/admin/invoice";
 import RequestKHQR from "@/components/app/admin/khqr/request-khqr";
 import PropTypes from "prop-types";
 import { afterPerDollar, cDollar, toUnit } from "@/utils/dec-format";
@@ -11,8 +11,8 @@ import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
 import { defimg } from "@/utils/resize-crop-image";
-import { getCarts } from "@/contexts/reducer/cart-slice";
 import { apiUrl } from "@/constants/api";
+import { getMe, getCarts } from "@/contexts/reducer";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,38 +23,28 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { getUser } from "@/contexts/reducer/user-slice";
 
 const TaxRate = 10;
 
 const POSCart = () => {
   const dispatch = useDispatch();
-  const { usrData } = useSelector((state) => state.user);
-  const { cartData } = useSelector((state) => state.cart);
-
-  // console.log(usrData);
-
-  useEffect(() => {
-    dispatch(getUser());
-    if (usrData?.AuthID) {
-      dispatch(getCarts({ id: usrData?.AuthID }));
-    }
-  }, [dispatch]);
+  const { data: meData } = useSelector((state) => state.me);
+  const { data: crtData } = useSelector((state) => state.cart);
 
   const { total, discount, finalAmount } = useMemo(() => {
     const total =
-      cartData?.reduce(
-        (sum, item) => sum + item.product.price * item.quantity,
+      crtData?.reduce(
+        (sum, item) => sum + (item?.product?.price || 0) * (item.quantity || 0),
         0
       ) || 0;
 
     const discount =
-      cartData?.reduce(
+      crtData?.reduce(
         (sum, item) =>
           sum +
-          (item.product.price *
-            item.quantity *
-            (item.product.discountRate || 0)) /
+          ((item?.product?.price || 0) *
+            (item.quantity || 0) *
+            (item.product?.discountRate || 0)) /
             100,
         0
       ) || 0;
@@ -69,35 +59,42 @@ const POSCart = () => {
     console.log({ total, discount, tax, finalAmount });
 
     return { total, tax, discount, finalAmount };
-  }, [cartData]);
+  }, [crtData]);
 
   const handleQuantityChange = async (cartId, action) => {
     try {
       const url =
         action === "up" ? `/cart/inc/${cartId}` : `/cart/dec/${cartId}`;
       await axiosAuth.put(url);
-      dispatch(getCarts({ id: usrData?.AuthID }));
+      dispatch(getCarts({ id: meData?.authId }));
     } catch (error) {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    dispatch(getMe());
+    dispatch(getCarts({ id: meData?.authId }));
+  }, [dispatch]);
+
+  console.log(crtData);
 
   const renderCartItem = (item) => (
     <Card key={item.cartId} className='shadow-none rounded-md'>
       <CardContent className='p-0 flex justify-between'>
         <div className='flex gap-3'>
           <img
-            src={`${apiUrl}/uploads/${item.product.picture}`}
+            src={`${apiUrl}/uploads/${item.product?.picture}`}
             onError={(e) => (e.target.src = defimg)}
-            alt={item?.product.productName}
+            alt={item?.product?.productName}
             className='h-[60px] object-cover rounded-s-md'
           />
           <div className='flex flex-col justify-between py-1'>
-            <p className='text-sm'>{item.product.productName}</p>
+            <p className='text-sm'>{item.product?.productName}</p>
             <p className='text-red-700 text-sm'>
               {afterPerDollar(
-                item.product.price * item.quantity,
-                item.product.discountRate
+                item.product?.price * item.quantity,
+                item.product?.discountRate
               )}
             </p>
           </div>
@@ -157,7 +154,7 @@ const POSCart = () => {
           </div>
           <Separator className='my-2' />
           <div className='flex flex-col gap-2'>
-            {cartData?.map(renderCartItem)}
+            {crtData?.map(renderCartItem)}
           </div>
           <Separator className='my-2' />
           {renderSummary()}
@@ -175,7 +172,7 @@ const CheckoutDialog = ({ amount }) => (
     </AlertDialogTrigger>
     <AlertDialogContent className='w-[400px]'>
       <AlertDialogHeader>
-        <AlertDialogTitle className='text-center'>
+        <AlertDialogTitle className='text-center text-md'>
           Invoice Check Out
         </AlertDialogTitle>
       </AlertDialogHeader>

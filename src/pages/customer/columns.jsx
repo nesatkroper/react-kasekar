@@ -1,12 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
-import CustomerEdit from "./customer-edit";
+import CustomerEdit from "./edit";
 import { getCustomers } from "@/contexts/reducer/customer-slice";
 import { useTranslation } from "react-i18next";
 import { generateColumns } from "@/components/app/table/generate-column";
 
-const CustomerEditWrapper = ({ item }) => {
-  return <CustomerEdit items={item} />;
+const CustomerEditWrapper = ({ item, onSuccess }) => {
+  return <CustomerEdit items={item} onSuccess={onSuccess} />;
 };
 
 export const CustomerColumns = () => {
@@ -22,7 +22,9 @@ export const CustomerColumns = () => {
       { key: "address", label: t("table.address") },
       { key: "status", label: t("table.status") },
     ],
-    (item) => <CustomerEditWrapper item={item} />,
+    (item, onSuccess) => (
+      <CustomerEditWrapper item={item} onSuccess={onSuccess} />
+    ),
     "customer",
     getCustomers
   );
@@ -30,4 +32,5 @@ export const CustomerColumns = () => {
 
 CustomerEditWrapper.propTypes = {
   item: PropTypes.object,
+  onSuccess: PropTypes.func,
 };

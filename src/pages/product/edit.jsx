@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import FormInput from "@/components/app/form/form-input";
 import FormComboBox from "@/components/app/form/form-combobox";
 import FormImagePreview from "@/components/app/form/form-image-preview";
@@ -7,21 +7,24 @@ import axiosInstance from "@/lib/axios-instance";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
-import { clearCacheAsync, getProducts } from "@/contexts/reducer/product-slice";
-import { getCategorys } from "@/contexts/reducer/product-category-slice";
+import { getProducts } from "@/contexts/reducer/product-slice";
+import { getCategorys } from "@/contexts/reducer/category-slice";
 import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogClose,
 } from "@/components/ui/dialog";
 import { useFormHandler } from "@/hooks/use-form-handler";
 import PropTypes from "prop-types";
 import { apiUrl } from "@/constants/api";
+import { showToast } from "@/components/app/toast";
+import { toast } from "sonner";
+import { Loader } from "lucide-react";
 
-const ProductEdit = ({ items }) => {
+const ProductEdit = ({ items = {}, onSuccess }) => {
   const dispatch = useDispatch();
-  const { data: pcaData } = useSelector((state) => state?.pcategories);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { data: pcaData } = useSelector((state) => state?.categories);
   const {
     formData,
     handleChange,
@@ -37,18 +40,43 @@ const ProductEdit = ({ items }) => {
     status: items.status,
   });
 
-  const handleFormSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+    setIsSubmitting(true);
+    const toastId = showToast("Loading...", "info", true, {
+      description: "Please wait",
+    });
 
     try {
       const submissionData = getFormDataForSubmission();
-      await axiosInstance.put("/product", submissionData);
+      const response = await axiosInstance.put(
+        `/product/${items.productId}`,
+        submissionData
+      );
+
+      setTimeout(() => {
+        toast.dismiss(toastId);
+
+        if (response.status === 201)
+          showToast(
+            `${formData.productName} Update Successfully.`,
+            "success",
+            false,
+            {
+              duration: 5000,
+            }
+          );
+
+        if (onSuccess) onSuccess();
+        setIsSubmitting(false);
+      }, 100);
 
       resetForm();
-      dispatch(clearCacheAsync());
-      dispatch(getProducts());
+      dispatch(getProducts({ params: { category: true } }));
     } catch (err) {
+      setIsSubmitting(false);
+      toast.dismiss(toastId);
+      showToast("Failed to update department", "error");
       console.log(err);
     }
   };
@@ -58,8 +86,8 @@ const ProductEdit = ({ items }) => {
   }, [dispatch]);
 
   return (
-    <DialogContent className='max-w-[500px]'>
-      <form onSubmit={handleFormSubmit} className='flex flex-col gap-2'>
+    <DialogContent className='max-w-[500px] p-4'>
+      <form onSubmit={handleSubmit} className='flex flex-col gap-2'>
         <DialogHeader className='mb-0'>
           <DialogTitle className='text-md'>
             Product Edit Information
@@ -71,14 +99,14 @@ const ProductEdit = ({ items }) => {
             onCallbackInput={handleChange}
             label='Product Name*'
             name='productName'
-            value={items.productName}
+            value={formData.productName}
             type='text'
           />
           <FormInput
             onCallbackInput={handleChange}
             label='Product Code*'
             name='productCode'
-            value={items.productCode}
+            value={formData.productCode}
             readonly
           />
           <FormComboBox
@@ -93,7 +121,7 @@ const ProductEdit = ({ items }) => {
             onCallbackInput={handleChange}
             label='Price*'
             name='price'
-            value={items.price}
+            value={formData.price}
             type='number'
             placeholder='$ 39.99'
           />
@@ -101,7 +129,7 @@ const ProductEdit = ({ items }) => {
             onCallbackInput={handleChange}
             label='Discount Rate*'
             name='discountRate'
-            value={items.discountRate}
+            value={formData.discountRate}
             type='number'
             placeholder='5 %'
             step={1}
@@ -112,17 +140,18 @@ const ProductEdit = ({ items }) => {
           />
           <FormImagePreview
             imgSrc={
-              items.picture
-                ? `${apiUrl}/uploads/${items.picture}`
+              formData.picture
+                ? `${apiUrl}/uploads/${formData.picture}`
                 : formData.picture
                 ? URL.createObjectURL(formData.picture)
                 : null
             }
           />
         </div>
-        <DialogClose asChild>
-          <Button type='submit'>Submit</Button>
-        </DialogClose>
+        <Button type='submit' disabled={isSubmitting} className='w-full'>
+          {isSubmitting ? <Loader className='animate-spin' /> : ""}
+          Submit
+        </Button>
       </form>
     </DialogContent>
   );
@@ -130,6 +159,7 @@ const ProductEdit = ({ items }) => {
 
 ProductEdit.propTypes = {
   items: PropTypes.object,
+  onSuccess: PropTypes.func,
 };
 
 export default ProductEdit;

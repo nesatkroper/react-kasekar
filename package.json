@@ -9,6 +9,7 @@
   "publishConfig": {
     "access": "public"
   },
+  "proxy": "http://localhost:3100",
   "scripts": {
     "start": "serve -s dist",
     "dev": "vite --host",

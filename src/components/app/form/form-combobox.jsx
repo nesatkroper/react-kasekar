@@ -34,7 +34,7 @@ const FormComboBox = ({
 }) => {
   const filter = (item || []).map((d) => ({
     value: String(d[optID]),
-    label: d[optLabel],
+    label: d[optLabel] || "",
   }));
 
   const [open, setOpen] = useState(false);

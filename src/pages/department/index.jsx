@@ -4,7 +4,10 @@ import AppDataTable from "@/components/app/table/app-data-table";
 import DepartmentAdd from "./add";
 import { DepartmentColumns } from "./columns";
 import { useDispatch, useSelector } from "react-redux";
-import { getDepartments } from "@/contexts/reducer/department-slice";
+import {
+  clearCache,
+  getDepartments,
+} from "@/contexts/reducer/department-slice";
 
 const Department = () => {
   const dispatch = useDispatch();
@@ -13,13 +16,14 @@ const Department = () => {
     (state) => state.departments
   );
 
+  const refresh = () => {
+    dispatch(clearCache());
+    dispatch(getDepartments({ params: { status: "all" } }));
+  };
+
   useEffect(() => {
     dispatch(getDepartments({ params: { status: "all" } }));
   }, [dispatch]);
-
-  const refresh = () => {
-    dispatch(getDepartments({ params: { status: "all" } }));
-  };
 
   return (
     <Layout>

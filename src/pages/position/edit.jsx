@@ -1,85 +1,82 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import axiosAuth from "@/lib/axios-auth";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { clearCache, getPositions } from "@/contexts/reducer/position-slice";
+import { getPositions } from "@/contexts/reducer/position-slice";
 import { useDispatch, useSelector } from "react-redux";
 import { getDepartments } from "@/contexts/reducer/department-slice";
 import { useFormHandler } from "@/hooks/use-form-handler";
-import { showToast } from "@/components/app/toast";
 import { FormComboBox, FormInput, FormTextArea } from "@/components/app/form";
+import { Loader } from "lucide-react";
+import { showToast } from "@/components/app/toast";
 import { toast } from "sonner";
-import { handleSendNotification } from "@/components/app/notification/handle-notification";
 import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogClose,
 } from "@/components/ui/dialog";
 
-const PositionAdd = () => {
+const PositionEdit = ({ items = {}, onSuccess }) => {
   const dispatch = useDispatch();
   const { data: depData } = useSelector((state) => state.departments);
-  const { formData, resetForm, handleChange } = useFormHandler({
-    departmentId: 0,
-    positionName: "",
-    memo: "",
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { formData, handleChange, resetForm } = useFormHandler({
+    departmentId: items?.departmentId || "",
+    positionName: items?.positionName || "",
+    memo: items?.memo || "",
   });
+
+  console.table(items);
+
+  useEffect(() => {
+    dispatch(getDepartments());
+  }, [dispatch]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
     const toastId = showToast("Loading...", "info", true, {
       description: "Please wait",
     });
-
     try {
-      const response = await axiosAuth.post("/position", formData);
+      const response = await axiosAuth.put(
+        `/position/${items.positionId}`,
+        formData
+      );
 
       setTimeout(() => {
         toast.dismiss(toastId);
-        handleSendNotification(
-          "Admin",
-          "31007b7e-93da-47fb-9e6e-c6c9bc0f317d",
-          "New Position Created",
-          "Created"
-        );
+
         if (response.status === 201)
           showToast(
-            `${formData.positionName} Add Successfully.`,
+            `${formData.positionName} Update Successfully.`,
             "success",
             false,
             {
               duration: 5000,
             }
           );
+
+        if (onSuccess) onSuccess();
+        setIsSubmitting(false);
       }, 100);
 
       resetForm();
-      dispatch(clearCache());
-      dispatch(getPositions({ params: { status: "all", department: true } }));
+      dispatch(getPositions({ status: "all", department: true }));
     } catch (e) {
-      setTimeout(() => {
-        toast.dismiss(toastId);
-        showToast("Error Occured", "error", false, {
-          description: "Please try again.",
-        });
-      }, 100);
-
+      setIsSubmitting(false);
+      toast.dismiss(toastId);
+      showToast("Failed to update position", "error");
       console.log(e);
     }
   };
-
-  useEffect(() => {
-    dispatch(getDepartments());
-  }, [dispatch]);
-
   return (
-    <DialogContent className='max-w-[350px]'>
+    <DialogContent className='max-w-[350px] p-4'>
       <form onSubmit={handleSubmit}>
         <DialogHeader>
           <DialogTitle className='text-md'>
-            Position Details Information.
+            Position Edit Information.
           </DialogTitle>
         </DialogHeader>
         <Separator className='my-3' />
@@ -87,18 +84,26 @@ const PositionAdd = () => {
           <FormInput
             onCallbackInput={handleChange}
             name='positionName'
-            value={formData.departmentName}
+            value={formData.positionName}
             label='Position Name*'
             placeholder='IT, Finance, ...'
-            required={true}
+            required
           />
+          <FormInput
+            inputClass='uppercase'
+            label='Position Code'
+            value={items.positionCode}
+            readonly
+          />
+
           <FormComboBox
             onCallbackSelect={(val) => handleChange("departmentId", val)}
             name='departmentId'
             label='Department'
-            item={depData}
+            item={depData || []}
             optID='departmentId'
             optLabel='departmentName'
+            defaultValue={items?.departmentId || ""}
           />
 
           <FormTextArea
@@ -108,18 +113,18 @@ const PositionAdd = () => {
             placeholder='N/A'
           />
         </div>
-        <DialogClose asChild>
-          <Button type='submit' className='w-full'>
-            Submit
-          </Button>
-        </DialogClose>
+        <Button type='submit' disabled={isSubmitting} className='w-full'>
+          {isSubmitting ? <Loader className='animate-spin' /> : ""}
+          Submit
+        </Button>
       </form>
     </DialogContent>
   );
 };
 
-PositionAdd.propTypes = {
-  lastCode: PropTypes.number,
+PositionEdit.propTypes = {
+  items: PropTypes.object,
+  onSuccess: PropTypes.func,
 };
 
-export default PositionAdd;
+export default PositionEdit;

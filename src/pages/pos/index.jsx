@@ -1,14 +1,15 @@
 import React, { useEffect } from "react";
 import Layout from "@/layout/layout";
-import POSSearch from "./components/pos-search";
-import POSCart from "./components/pos-cart";
-import AppLoading from "@/components/app/utils/app-loading";
-import POSList from "./components/pos-list";
+import POSSearch from "./pos-search";
+import POSCart from "./pos-cart";
+import AppLoading from "@/components/app/utils/table-loading";
+import POSList from "./pos-list";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useDispatch, useSelector } from "react-redux";
-import { getProducts } from "@/contexts/reducer/product-slice";
 import { getCode } from "@/contexts/reducer/code-slice";
+import { getProducts } from "@/contexts/reducer";
+
 // import { useTranslation } from "react-i18next";
 
 const POS = () => {
@@ -35,9 +36,9 @@ const POS = () => {
               <POSList data={proData} />
             </ScrollArea>
           ) : (
-            <div className='w-full h-[80vh] 2xl:col-span-5 lg:col-span-3 md:col-span-3 col-span-1 rounded-2xl flex  justify-center'>
+            <table className='w-full h-[80vh] 2xl:col-span-5 lg:col-span-3 md:col-span-3 col-span-1 rounded-2xl flex  justify-center'>
               <AppLoading />
-            </div>
+            </table>
           )}
           <POSCart />
         </div>

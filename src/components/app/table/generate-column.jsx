@@ -1,4 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
+import axiosAuth from "@/lib/axios-auth";
+import AppDetailViewer from "./app-detail-viewer";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { useDispatch } from "react-redux";
+import { defimg } from "@/utils/resize-crop-image";
+import { apiUrl } from "@/constants/api";
+import { cDollar, toUnit } from "@/utils/dec-format";
+import { useTranslation } from "react-i18next";
+import { showToast } from "../toast";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,18 +35,6 @@ import {
   MoreHorizontal,
   Trash2,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import { useDispatch } from "react-redux";
-
-import { defimg } from "@/utils/resize-crop-image";
-import { apiUrl } from "@/constants/api";
-import { cDollar, toUnit } from "@/utils/dec-format";
-import { useTranslation } from "react-i18next";
-import axiosAuth from "@/lib/axios-auth";
-import AppDetailViewer from "./app-detail-viewer";
-import { showToast } from "../toast";
 
 export const generateColumns = (
   fields,
@@ -179,10 +178,16 @@ export const generateColumns = (
       const dispatch = useDispatch();
       const item = row.original;
       const status = item.status === "active";
+      const [isDialogOpen, setIsDialogOpen] = useState(false);
 
       const editComponent =
         typeof editComponentCreator === "function"
-          ? editComponentCreator(item)
+          ? React.cloneElement(
+              editComponentCreator(item, () => setIsDialogOpen(false)),
+              {
+                onSuccess: () => setIsDialogOpen(false),
+              }
+            )
           : null;
 
       const handleDelete = async () => {
@@ -252,14 +257,14 @@ export const generateColumns = (
               </AlertDialog>
 
               {editComponent && (
-                <Dialog>
-                  {editComponent}
+                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                   <DialogTrigger asChild>
                     <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                       <FilePenLine className='me-1' />
                       {t("table.opt.edit")}
                     </DropdownMenuItem>
                   </DialogTrigger>
+                  {editComponent}
                 </Dialog>
               )}
 

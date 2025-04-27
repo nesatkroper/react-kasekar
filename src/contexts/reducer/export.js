@@ -1,10 +1,11 @@
 import userReduce from "./user-slice";
+import meReduce from "./me-slice";
 import authReduce from "./auth-slice";
 import departmentReduce from "./department-slice";
 import positionReduce from "./position-slice";
 import customerReduce from "./customer-slice";
 import employeeReduce from "./employee-slice";
-import pcategoryReduce from "./product-category-slice";
+import pcategoryReduce from "./category-slice";
 import productReduce from "./product-slice";
 import counterReduce from "./cart-slice";
 import searchCateReduce from "./search-category-slice";
@@ -16,12 +17,13 @@ import groupMessageReduce from "./group-message-slice";
 
 export default {
   user: userReduce,
+  me: meReduce,
   auths: authReduce,
   departments: departmentReduce,
   positions: positionReduce,
   customers: customerReduce,
   employees: employeeReduce,
-  pcategories: pcategoryReduce,
+  categories: pcategoryReduce,
   products: productReduce,
   cart: cartReduce,
   searchCates: searchCateReduce,

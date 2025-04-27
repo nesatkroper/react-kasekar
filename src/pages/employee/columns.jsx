@@ -1,12 +1,12 @@
 import React from "react";
-import EmployeeEdit from "./employee-edit";
+import EmployeeEdit from "./edit";
 import PropTypes from "prop-types";
 import { generateColumns } from "@/components/app/table";
 import { getEmployees } from "@/contexts/reducer/employee-slice";
 import { useTranslation } from "react-i18next";
 
-const EmployeeEditWrapper = ({ item }) => {
-  return <EmployeeEdit items={item} />;
+const EmployeeEditWrapper = ({ item, onSuccess }) => {
+  return <EmployeeEdit items={item} onSuccess={onSuccess} />;
 };
 
 export const EmployeeColumns = () => {
@@ -23,7 +23,9 @@ export const EmployeeColumns = () => {
       { key: "salary", label: t("table.emp.salary") },
       { key: "status", label: t("table.status") },
     ],
-    (item) => <EmployeeEditWrapper item={item} />,
+    (item, onSuccess) => (
+      <EmployeeEditWrapper item={item} onSuccess={onSuccess} />
+    ),
     "employee",
     getEmployees
   );
@@ -31,4 +33,5 @@ export const EmployeeColumns = () => {
 
 EmployeeEditWrapper.propTypes = {
   item: PropTypes.object,
+  onSuccess: PropTypes.func,
 };

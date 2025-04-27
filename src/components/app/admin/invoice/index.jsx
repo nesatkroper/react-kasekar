@@ -3,17 +3,15 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import axiosInstance from "@/lib/axios-instance";
 import PropTypes from "prop-types";
+import InvoiceHeader from "./inv-header";
+import InvoiceContent from "./inv-content";
+import InvoiceTable from "./inv-table";
+import InvoiceFooter from "./inv-footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { useRef } from "react";
 import { logo } from "@/utils/resize-crop-image";
-import {
-  InvoiceContent,
-  InvoiceFooter,
-  InvoiceHeader,
-  InvoiceTable,
-} from "./components";
 
 const Invoice = (props) => {
   const { method = "cash", type = "sale", currency = "usd" } = props;

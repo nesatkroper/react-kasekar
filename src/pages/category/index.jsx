@@ -1,18 +1,19 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "@/layout/layout";
-import ProductCategoryAdd from "./components/category-add.jsx";
+import ProductCategoryAdd from "./add.jsx";
 import AppDataTable from "@/components/app/table/app-data-table.jsx";
+import { CategoryColumns } from "./columns.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  clearCacheAsync,
+  clearCache,
   getCategorys,
-} from "@/contexts/reducer/product-category-slice.jsx";
-import { CategoryColumns } from "./components/category-columns.jsx";
+} from "@/contexts/reducer/category-slice.jsx";
 
 const ProductCategory = () => {
   const dispatch = useDispatch();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { data: pcaData, loading: pcaLoading } = useSelector(
-    (state) => state?.pcategories
+    (state) => state?.categories
   );
 
   useEffect(() => {
@@ -20,7 +21,7 @@ const ProductCategory = () => {
   }, [dispatch]);
 
   const refresh = () => {
-    dispatch(clearCacheAsync());
+    dispatch(clearCache());
     dispatch(getCategorys());
   };
 
@@ -34,7 +35,12 @@ const ProductCategory = () => {
         loading={pcaLoading}
         refresh={refresh}
         add='Add Category'
-        addElement={<ProductCategoryAdd />}
+        addElement={
+          <ProductCategoryAdd
+            isOpen={isDialogOpen}
+            onOpenChange={setIsDialogOpen}
+          />
+        }
       />
     </Layout>
   );

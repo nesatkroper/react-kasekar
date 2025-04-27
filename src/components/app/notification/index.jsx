@@ -8,7 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { useEffect, useRef, useState } from "react";
 import { ArrowDown, X } from "lucide-react";
 import { useDispatch } from "react-redux";
-import { getUser } from "@/contexts/reducer/user-slice";
+import { getUsers } from "@/contexts/reducer/user-slice";
 import { motion, AnimatePresence } from "framer-motion";
 import { groupMessagesByDate } from "../admin/group-chat/group";
 import { messageVariants, sheetVariants } from "@/constants/variants";
@@ -54,7 +54,7 @@ const Notification = ({ onClose }) => {
   };
 
   useEffect(() => {
-    dispatch(getUser());
+    dispatch(getUsers());
     fetchOldMessages();
 
     SOCKET.on("receiveNotification", (message) => {

@@ -11,6 +11,7 @@ export const createApiThunk = (name, endpoint, options = {}) => {
       { rejectWithValue }
     ) => {
       try {
+        console.log(id);
         let response;
         const queryParams = new URLSearchParams(params).toString();
 
@@ -20,11 +21,13 @@ export const createApiThunk = (name, endpoint, options = {}) => {
             if (isPrismaEndpoint) {
               url = id ? `${endpoint}/${id}` : endpoint;
               response = await axiosInstance.get(url, { params });
+              console.log(url);
             } else {
               url = id
                 ? `${endpoint}/${id}?${queryParams}`
                 : `${endpoint}?${queryParams}`;
               response = await axiosInstance.get(url);
+              console.log(url);
             }
             break;
           }

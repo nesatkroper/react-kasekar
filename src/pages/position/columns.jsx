@@ -1,12 +1,12 @@
-import PositionUpdate from "./position-edit";
+import PositionUpdate from "./edit";
 import React from "react";
 import PropTypes from "prop-types";
 import { generateColumns } from "@/components/app/table/generate-column";
 import { getPositions } from "@/contexts/reducer/position-slice";
 import { useTranslation } from "react-i18next";
 
-const PositionEditWrapper = ({ item }) => {
-  return <PositionUpdate items={item} />;
+const PositionEditWrapper = ({ item, onSuccess }) => {
+  return <PositionUpdate items={item} onSuccess={onSuccess} />;
 };
 
 export const PositionColumns = () => {
@@ -19,7 +19,9 @@ export const PositionColumns = () => {
       { key: "department.departmentName", label: t("table.dep.name") },
       { key: "status", label: t("table.status") },
     ],
-    (item) => <PositionEditWrapper item={item} />,
+    (item, onSuccess) => (
+      <PositionEditWrapper item={item} onSuccess={onSuccess} />
+    ),
     "position",
     getPositions
   );
@@ -27,4 +29,5 @@ export const PositionColumns = () => {
 
 PositionEditWrapper.propTypes = {
   item: PropTypes.object,
+  onSuccess: PropTypes.func,
 };

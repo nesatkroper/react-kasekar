@@ -5,16 +5,13 @@ import {
 
 export const getCustomers = createApiThunk(
   "customers/getCustomers",
-  "/customer",
-  {
-    cacheEnabled: true,
-    cacheExpiration: 24 * 60 * 60 * 1000,
-  }
+  "/customer"
 );
 
-const customerSlice = createGenericSlice("customers", getCustomers);
+const customerSlice = createGenericSlice("customers", getCustomers, {
+  meta: { total: 0, page: 1, limit: 20, totalPages: 0 },
+});
 
 export default customerSlice.reducer;
-export const { clearCacheAsync } = customerSlice;
-export const { clearCache, updateItem, addItem, removeItem } =
+export const { clearCache, updateItem, addItem, removeItem, updateNestedItem } =
   customerSlice.actions;

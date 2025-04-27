@@ -6,16 +6,16 @@ import React from "react";
 const InvoiceHeader = (props) => {
   const { logo, brand } = props;
   return (
-    <CardHeader className="pb-2 pt-3">
-      <CardTitle className=" flex flex-col items-center gap-2">
-        <p className="text-lg">{brand}</p>
+    <CardHeader className='pb-2 pt-3'>
+      <CardTitle className=' flex flex-col items-center gap-2'>
+        <p className='text-md'>{brand}</p>
         <img
           src={logo || defimg}
           onError={defimg}
-          alt="logo"
-          className="w-[100px] rounded-lg my-0"
+          alt='logo'
+          className='w-[100px] rounded-lg my-0'
         />
-        <p className="text-lg underline ">INVOICE</p>
+        <p className='text-md underline '>INVOICE</p>
       </CardTitle>
     </CardHeader>
   );

@@ -1,27 +1,25 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "@/layout/layout";
-import ProductAdd from "./components/product-add.jsx";
+import ProductAdd from "./add.jsx";
 import AppDataTable from "@/components/app/table/app-data-table.jsx";
 import { useDispatch, useSelector } from "react-redux";
-import { ProductColumns } from "./components/product-columns.jsx";
-import {
-  clearCacheAsync,
-  getProducts,
-} from "@/contexts/reducer/product-slice.jsx";
+import { ProductColumns } from "./columns.jsx";
+import { clearCache, getProducts } from "@/contexts/reducer/product-slice.jsx";
 
 const Product = () => {
   const dispatch = useDispatch();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { data: proData, loading: proLoading } = useSelector(
     (state) => state?.products
   );
 
   useEffect(() => {
-    dispatch(getProducts({ category: true }));
+    dispatch(getProducts({ params: { category: true } }));
   }, [dispatch]);
 
   const refresh = () => {
-    dispatch(clearCacheAsync());
-    dispatch(getProducts());
+    dispatch(clearCache());
+    dispatch(getProducts({ params: { category: true } }));
   };
 
   console.log(proData);
@@ -36,7 +34,9 @@ const Product = () => {
         loading={proLoading}
         add='Add Product'
         refresh={refresh}
-        addElement={<ProductAdd />}
+        addElement={
+          <ProductAdd isOpen={isDialogOpen} onOpenChange={setIsDialogOpen} />
+        }
       />
     </Layout>
   );

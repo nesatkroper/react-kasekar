@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import TableLoading from "../utils/app-loading";
+import TableLoading from "../utils/table-loading";
 import PropTypes from "prop-types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

@@ -4,83 +4,112 @@ import axiosAuth from "@/lib/axios-auth";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
-import { Loader2 } from "lucide-react";
-import { GENDER } from "@/utils/default-data";
+import { getPositions } from "@/contexts/reducer/position-slice";
+import { getEmployees } from "@/contexts/reducer/employee-slice";
+import { getDepartments } from "@/contexts/reducer/department-slice";
+import { Loader } from "lucide-react";
 import { useFormHandler } from "@/hooks/use-form-handler";
-import { clearCache } from "@/contexts/reducer/employee-slice";
-import { getDepartments, getEmployees, getPositions } from "@/contexts/reducer";
+import { GENDER } from "@/utils/default-data";
 import { FormComboBox, FormDatePicker, FormInput } from "@/components/app/form";
+import { showToast } from "@/components/app/toast";
+import { toast } from "sonner";
 import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogClose,
 } from "@/components/ui/dialog";
 
-const EmployeeAdd = () => {
+const EmployeeEdit = ({ items = {}, onSuccess }) => {
   const dispatch = useDispatch();
-  const [issend, setIssend] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { data: depData } = useSelector((state) => state.departments);
   const { data: posData } = useSelector((state) => state.positions);
   const { formData, resetForm, handleChange } = useFormHandler({
-    status: "active",
-    firstName: "",
-    lastName: "",
-    gender: "",
-    dob: "",
-    phone: "",
-    positionId: "",
-    departmentId: "",
-    salary: "",
-    hiredDate: "",
+    status: items?.status,
+    firstName: items?.firstName,
+    lastName: items?.lastName,
+    gender: items?.gender,
+    dob: items?.dob,
+    phone: items?.phone,
+    positionId: items?.positionId,
+    departmentId: items?.departmentId,
+    salary: items?.salary,
+    hiredDate: items?.hiredDate,
   });
+
+  console.log(items);
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    const toastId = showToast("Loading...", "info", true, {
+      description: "Please wait",
+    });
     try {
-      setIssend(true);
-      await axiosAuth.post("/employee", formData).then((res) => {
-        console.log(res);
-        resetForm();
-        dispatch(clearCache());
-        getEmployees({ params: { status: "all", info: true, position: true } });
-      });
+      const response = await axiosAuth.put(
+        `/employee/${items.employeeId}`,
+        formData
+      );
+
+      setTimeout(() => {
+        toast.dismiss(toastId);
+
+        if (response.status === 201)
+          showToast(
+            `${formData.lastName} ${formData.firstName} Add Successfully.`,
+            "success",
+            false,
+            {
+              duration: 5000,
+            }
+          );
+
+        if (onSuccess) onSuccess();
+        setIsSubmitting(false);
+      }, 100);
+      resetForm();
+      dispatch(
+        getEmployees({
+          params: { status: "all", info: true, position: true },
+        })
+      );
     } catch (e) {
-      console.error("Submission error:", e);
-    } finally {
-      setIssend(false);
+      setIsSubmitting(false);
+      toast.dismiss(toastId);
+      showToast("Failed to update employee", "error");
+      console.log(e);
     }
   };
 
-  useEffect(() => {
-    dispatch(getDepartments({ params: { positions: true } }));
-    dispatch(getPositions());
-  }, [dispatch]);
-
-  const filteredPositions = posData.filter(
+  const filteredPositions = posData?.filter(
     (pos) => pos.departmentId === formData.departmentId
   );
 
+  useEffect(() => {
+    dispatch(getDepartments());
+    dispatch(getPositions());
+  }, [dispatch]);
+
   return (
-    <DialogContent className='max-w-[500px]'>
+    <DialogContent className='max-w-[500px] p-4'>
       <form onSubmit={handleFormSubmit}>
-        <DialogHeader>
-          <DialogTitle className='text-md'>Employee Details</DialogTitle>
+        <DialogHeader className='mb-3'>
+          <DialogTitle className='text-md'>Employee Edit Details</DialogTitle>
         </DialogHeader>
-        <Separator className='my-2' />
+        <Separator />
         <div className='grid sm:grid-cols-2 gap-3 mb-3'>
           <FormInput
             onCallbackInput={handleChange}
             label='First Name*'
             name='firstName'
-            placeholder='John, ...'
+            value={items?.firstName}
             required
           />
           <FormInput
             onCallbackInput={handleChange}
             label='Last Name*'
             name='lastName'
-            placeholder='Doe, ...'
+            value={items?.lastName}
             required
           />
 
@@ -96,6 +125,7 @@ const EmployeeAdd = () => {
             onCallbackInput={handleChange}
             label='Phone Number'
             name='phone'
+            value={items?.phone}
             placeholder='010280202'
           />
 
@@ -122,26 +152,34 @@ const EmployeeAdd = () => {
             optID='positionId'
             optLabel='positionName'
           />
-
           <FormInput
             onCallbackInput={handleChange}
             label='Salary*'
             name='salary'
+            value={items?.salary}
+            placeholder='$250.00'
+          />
+          <FormInput
+            onCallbackInput={handleChange}
+            label='Employee Code*'
+            name='employeeCode'
+            value={items?.employeeCode}
+            readonly
             placeholder='$250.00'
           />
         </div>
-        <DialogClose asChild>
-          <Button type='submit' disabled={issend} className='w-full'>
-            {issend ? <Loader2 className='animate-spin' /> : "Submit"}
-          </Button>
-        </DialogClose>
+        <Button type='submit' disabled={isSubmitting} className='w-full'>
+          {isSubmitting ? <Loader className='animate-spin' /> : ""}
+          Submit
+        </Button>
       </form>
     </DialogContent>
   );
 };
 
-EmployeeAdd.propTypes = {
-  lastCode: PropTypes.number,
+EmployeeEdit.propTypes = {
+  items: PropTypes.object,
+  onSuccess: PropTypes.func,
 };
 
-export default EmployeeAdd;
+export default EmployeeEdit;

@@ -3,13 +3,10 @@ import {
   createGenericSlice,
 } from "../utils/create-async-slice";
 
-export const getCities = createApiThunk("cities/getCities", "/city", {
-  cacheEnabled: true,
-  cacheExpiration: 24 * 60 * 60 * 1000,
-});
+export const getCities = createApiThunk("citys/getCities", "/city");
 
-const citieSlice = createGenericSlice("cities", getCities);
+const citieSlice = createGenericSlice("citys", getCities);
 
 export default citieSlice.reducer;
-export const { clearCache, updateItem, addItem, removeItem } =
+export const { clearCache, updateItem, addItem, removeItem, updateNestedItem } =
   citieSlice.actions;

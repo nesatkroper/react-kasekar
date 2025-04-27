@@ -18,6 +18,7 @@ const FormInput = ({
   min = 0,
   step = 0.01,
   error,
+  disabled,
 }) => {
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -38,6 +39,7 @@ const FormInput = ({
         min={min}
         step={step}
         required={required}
+        disabled={disabled}
       />
       {error && <p className='text-red-500 text-sm mt-1'>{error}</p>}
     </div>
@@ -60,6 +62,7 @@ FormInput.propTypes = {
   step: PropTypes.number,
   required: PropTypes.bool,
   error: PropTypes.string,
+  disabled: PropTypes.bool,
 };
 
 export default FormInput;
