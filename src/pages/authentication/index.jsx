@@ -1,13 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import AppDataTable from "@/components/app/table/app-data-table";
-import AuthenticationAdd from "./components/authentication-add";
-import Layout from "@/layout/layout";
+import AuthenticationAdd from "./add";
+import Layout from "@/layout";
 import { getAuth } from "@/contexts/reducer/auth-slice";
 import { useDispatch, useSelector } from "react-redux";
-import { AuthenticationColumns } from "./components/authentication-columns";
+import { AuthenticationColumns } from "./columns";
 
 const Authentication = () => {
   const dispatch = useDispatch();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { authData, authLoading } = useSelector((state) => state.auths);
 
   useEffect(() => {
@@ -23,7 +24,12 @@ const Authentication = () => {
         data={authData}
         loading={authLoading}
         columns={AuthenticationColumns()}
-        addElement={<AuthenticationAdd />}
+        addElement={
+          <AuthenticationAdd
+            isOpen={isDialogOpen}
+            onOpenChange={setIsDialogOpen}
+          />
+        }
         title='Authentication'
         main='email'
       />

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import Layout from "@/layout/layout";
+import Layout from "@/layout";
 import POSSearch from "./pos-search";
 import POSCart from "./pos-cart";
 import AppLoading from "@/components/app/utils/table-loading";

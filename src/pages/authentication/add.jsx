@@ -4,7 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { getEmployees } from "@/contexts/reducer/employee-slice";
-import { Loader2 } from "lucide-react";
+import { Check, Loader } from "lucide-react";
 import { getAuth } from "@/contexts/reducer/auth-slice";
 import { useFormHandler } from "@/hooks/use-form-handler";
 import { FormComboBox, FormInput, FormSelect } from "@/components/app/form";
@@ -12,36 +12,16 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogClose,
 } from "@/components/ui/dialog";
+import { showToast } from "@/components/app/toast";
+import { toast } from "sonner";
+import PropTypes from "prop-types";
+import { ROLE } from "@/constants/role";
 
-const ROLE = [
-  {
-    value: "admin",
-    data: "Admin (Access all Permission)",
-  },
-  {
-    value: "management",
-    data: "Management (Allow all Data)",
-  },
-  {
-    value: "accountant",
-    data: "Accountant (Allow all Finance)",
-  },
-  {
-    value: "sale",
-    data: "Sale (For General Staff)",
-  },
-  {
-    value: "user",
-    data: "User (View Landing Only)",
-  },
-];
-
-const AuthenticationAdd = () => {
+const AuthenticationAdd = ({ onSuccess }) => {
   const dispatch = useDispatch();
   const { data: empData } = useSelector((state) => state.employees);
-  const [issend, setIssend] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { formData, handleChange, resetForm } = useFormHandler({
     departmentId: 0,
     email: "",
@@ -51,18 +31,34 @@ const AuthenticationAdd = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIssend(true);
-    await axiosAuth
-      .post("/auth/register", formData)
-      .then((res) => {
-        console.log(res);
-        resetForm();
-        dispatch(getAuth());
-        setIssend(false);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    setIsSubmitting(true);
+    const toastId = showToast("Loading...", "info", true, {
+      description: "Please wait",
+    });
+
+    try {
+      const response = await axiosAuth.post("/auth/register", formData);
+
+      setTimeout(() => {
+        toast.dismiss(toastId);
+
+        if (response.status === 201)
+          showToast(`${formData.email} Add Successfully.`, "success", false, {
+            duration: 5000,
+          });
+
+        if (onSuccess) onSuccess();
+        setIsSubmitting(false);
+      }, 100);
+
+      resetForm();
+      dispatch(getAuth());
+    } catch (err) {
+      setIsSubmitting(false);
+      toast.dismiss(toastId);
+      showToast("Failed to add customer", "error");
+      console.log(err);
+    }
   };
 
   useEffect(() => {
@@ -70,7 +66,7 @@ const AuthenticationAdd = () => {
   }, [dispatch]);
 
   return (
-    <DialogContent className='max-w-[350px]'>
+    <DialogContent className='max-w-[350px] p-4'>
       <form onSubmit={handleSubmit}>
         <DialogHeader>
           <DialogTitle className='text-md'>
@@ -111,14 +107,17 @@ const AuthenticationAdd = () => {
             required={true}
           />
         </div>
-        <DialogClose asChild>
-          <Button type='submit' className='w-full'>
-            {issend ? <Loader2 className=' animate-spin' /> : "Submit"}
-          </Button>
-        </DialogClose>
+        <Button type='submit' disabled={isSubmitting} className='w-full'>
+          {isSubmitting ? <Loader className='animate-spin' /> : <Check />}
+          Submit
+        </Button>
       </form>
     </DialogContent>
   );
+};
+
+AuthenticationAdd.propTypes = {
+  onSuccess: PropTypes.func,
 };
 
 export default AuthenticationAdd;

@@ -4,7 +4,7 @@ import axiosAuth from "@/lib/axios-auth";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
-import { Loader } from "lucide-react";
+import { Check, Loader } from "lucide-react";
 import { GENDER } from "@/utils/default-data";
 import { useFormHandler } from "@/hooks/use-form-handler";
 import { getDepartments, getEmployees, getPositions } from "@/contexts/reducer";
@@ -153,7 +153,7 @@ const EmployeeAdd = ({ onSuccess }) => {
         </div>
 
         <Button type='submit' disabled={isSubmitting} className='w-full'>
-          {isSubmitting ? <Loader className='animate-spin' /> : ""}
+          {isSubmitting ? <Loader className='animate-spin' /> : <Check />}
           Submit
         </Button>
       </form>

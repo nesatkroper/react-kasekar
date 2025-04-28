@@ -4,6 +4,7 @@ import authReduce from "./auth-slice";
 import departmentReduce from "./department-slice";
 import positionReduce from "./position-slice";
 import customerReduce from "./customer-slice";
+import customerInfoReduce from "./customerinfo-slice";
 import employeeReduce from "./employee-slice";
 import pcategoryReduce from "./category-slice";
 import productReduce from "./product-slice";
@@ -22,6 +23,7 @@ export default {
   departments: departmentReduce,
   positions: positionReduce,
   customers: customerReduce,
+  cusinfo: customerInfoReduce,
   employees: employeeReduce,
   categories: pcategoryReduce,
   products: productReduce,

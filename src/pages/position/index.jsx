@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Layout from "@/layout/layout";
+import Layout from "@/layout";
 import AppDataTable from "@/components/app/table/app-data-table";
 import PositionAdd from "./add";
 import { clearCache, getPositions } from "@/contexts/reducer/position-slice";

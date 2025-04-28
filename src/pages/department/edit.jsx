@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useDispatch } from "react-redux";
 import { useFormHandler } from "@/hooks/use-form-handler";
 import { FormInput, FormTextArea } from "@/components/app/form";
-import { Loader } from "lucide-react";
+import { Check, Loader } from "lucide-react";
 import { showToast } from "@/components/app/toast";
 import { toast } from "sonner";
 import { getDepartments } from "@/contexts/reducer/department-slice";
@@ -97,7 +97,7 @@ const DepartmentEdit = ({ items = {}, onSuccess }) => {
           />
         </div>
         <Button type='submit' disabled={isSubmitting} className='w-full'>
-          {isSubmitting ? <Loader className='animate-spin' /> : ""}
+          {isSubmitting ? <Loader className='animate-spin' /> : <Check />}
           Submit
         </Button>
       </form>

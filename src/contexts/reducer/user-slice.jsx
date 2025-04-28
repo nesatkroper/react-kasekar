@@ -5,7 +5,7 @@ import {
 
 export const getUsers = createApiThunk(
   "/auth/all-auth/getUsers",
-  "/department"
+  "/auth/all-auth"
 );
 
 const UsersSlice = createGenericSlice("/auth/all-auth", getUsers);

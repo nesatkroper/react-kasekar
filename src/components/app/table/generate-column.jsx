@@ -74,6 +74,9 @@ export const generateColumns = (
       if (field.key === "capacity")
         return <div>{toUnit(value, 0, t("table.room.peo"))}</div>;
 
+      if (field.key === "email")
+        return <div className='font-semibold'>{value}</div>;
+
       if (field.key.includes("Code"))
         return (
           <div className='uppercase font-jet font-light'>{value || "N/A"}</div>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Layout from "@/layout/layout";
+import Layout from "@/layout";
 import useTextToSpeech from "@/hooks/use-text2speech";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";

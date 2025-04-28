@@ -11,7 +11,7 @@ import { useDispatch } from "react-redux";
 import { apiUrl } from "@/constants/api";
 import { getCategorys } from "@/contexts/reducer/category-slice";
 import { useFormHandler } from "@/hooks/use-form-handler";
-import { Loader } from "lucide-react";
+import { Check, Loader } from "lucide-react";
 import { toast } from "sonner";
 import { showToast } from "@/components/app/toast";
 import {
@@ -115,7 +115,7 @@ const CategoryEdit = ({ items = {}, onSuccess }) => {
           />
         </div>
         <Button type='submit' disabled={isSubmitting} className='w-full'>
-          {isSubmitting ? <Loader className='animate-spin' /> : ""}
+          {isSubmitting ? <Loader className='animate-spin' /> : <Check />}
           Submit
         </Button>
       </form>

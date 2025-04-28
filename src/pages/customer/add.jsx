@@ -5,7 +5,7 @@ import { useFormHandler } from "@/hooks/use-form-handler";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { useDispatch } from "react-redux";
-import { Loader } from "lucide-react";
+import { Check, Loader } from "lucide-react";
 import { GENDER } from "@/utils/default-data";
 import {
   DialogContent,
@@ -104,7 +104,7 @@ const CustomerAdd = ({ onSuccess }) => {
           />
         </div>
         <Button type='submit' disabled={isSubmitting} className='w-full'>
-          {isSubmitting ? <Loader className='animate-spin' /> : ""}
+          {isSubmitting ? <Loader className='animate-spin' /> : <Check />}
           Submit
         </Button>
       </form>

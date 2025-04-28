@@ -69,6 +69,7 @@ const Routes = () => {
       ),
       children: [
         { path: "/admin/auth", element: <Navigate to='/' /> },
+        { path: "/", element: LazyLoad(Home)() },
         { path: "/home", element: LazyLoad(Home)() },
         { path: "/dashboard", element: LazyLoad(Dashboard)() },
         { path: "/department", element: LazyLoad(Department)() },

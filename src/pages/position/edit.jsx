@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getDepartments } from "@/contexts/reducer/department-slice";
 import { useFormHandler } from "@/hooks/use-form-handler";
 import { FormComboBox, FormInput, FormTextArea } from "@/components/app/form";
-import { Loader } from "lucide-react";
+import { Check, Loader } from "lucide-react";
 import { showToast } from "@/components/app/toast";
 import { toast } from "sonner";
 import {
@@ -114,7 +114,7 @@ const PositionEdit = ({ items = {}, onSuccess }) => {
           />
         </div>
         <Button type='submit' disabled={isSubmitting} className='w-full'>
-          {isSubmitting ? <Loader className='animate-spin' /> : ""}
+          {isSubmitting ? <Loader className='animate-spin' /> : <Check />}
           Submit
         </Button>
       </form>

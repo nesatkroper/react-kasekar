@@ -1,4 +1,4 @@
-import Layout from "@/layout/layout";
+import Layout from "@/layout";
 import MyBigBarChartInteractive from "./components/big-bar-chart-interactive";
 import MyAreaChart from "./components/area-chart-gradient";
 import MyBarChart from "./components/bar-chart-multiple";
@@ -10,7 +10,7 @@ const Dashboard = () => {
   return (
     <Layout>
       <MyBigBarChartInteractive />
-      <div className="grid grid-cols-3 gap-3">
+      <div className='grid grid-cols-3 gap-3'>
         <MyAreaChart />
         <MyBarChart />
         <MyPieChart />

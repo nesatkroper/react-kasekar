@@ -13,7 +13,7 @@ import { getCategorys } from "@/contexts/reducer/category-slice";
 import { useFormHandler } from "@/hooks/use-form-handler";
 import { showToast } from "@/components/app/toast";
 import { toast } from "sonner";
-import { Loader } from "lucide-react";
+import { Check, Loader } from "lucide-react";
 import {
   DialogContent,
   DialogHeader,
@@ -133,7 +133,7 @@ const ProductAdd = ({ onSuccess }) => {
         </div>
 
         <Button type='submit' disabled={isSubmitting} className='w-full'>
-          {isSubmitting ? <Loader className='animate-spin' /> : ""}
+          {isSubmitting ? <Loader className='animate-spin' /> : <Check />}
           Submit
         </Button>
       </form>

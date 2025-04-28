@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from "react";
-import Layout from "@/layout/layout";
+import Layout from "@/layout";
 import Webcam from "react-webcam";
 import { Button } from "@/components/ui/button";
 import { showLoadingToast } from "@/components/app/loading/toast-loading";

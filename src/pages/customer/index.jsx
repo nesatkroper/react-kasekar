@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import AppDataTable from "@/components/app/table/app-data-table";
-import Layout from "@/layout/layout";
+import Layout from "@/layout";
 import CustomerAdd from "./add";
 import { useDispatch, useSelector } from "react-redux";
 import { CustomerColumns } from "./columns";
@@ -15,11 +15,11 @@ const Customer = () => {
 
   const refresh = () => {
     dispatch(clearCache());
-    dispatch(getCustomers({ params: { status: "all" } }));
+    dispatch(getCustomers({ params: { status: "all", info: true } }));
   };
 
   useEffect(() => {
-    dispatch(getCustomers({ params: { status: "all" } }));
+    dispatch(getCustomers({ params: { status: "all", info: true } }));
   }, [dispatch]);
 
   return (

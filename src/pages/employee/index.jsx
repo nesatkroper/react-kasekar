@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Layout from "@/layout/layout";
+import Layout from "@/layout";
 import EmployeeAdd from "./add";
 import AppDataTable from "@/components/app/table/app-data-table";
 import { useDispatch, useSelector } from "react-redux";

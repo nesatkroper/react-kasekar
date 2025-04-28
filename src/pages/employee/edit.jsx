@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getPositions } from "@/contexts/reducer/position-slice";
 import { getEmployees } from "@/contexts/reducer/employee-slice";
 import { getDepartments } from "@/contexts/reducer/department-slice";
-import { Loader } from "lucide-react";
+import { Check, Loader } from "lucide-react";
 import { useFormHandler } from "@/hooks/use-form-handler";
 import { GENDER } from "@/utils/default-data";
 import { FormComboBox, FormDatePicker, FormInput } from "@/components/app/form";
@@ -169,7 +169,7 @@ const EmployeeEdit = ({ items = {}, onSuccess }) => {
           />
         </div>
         <Button type='submit' disabled={isSubmitting} className='w-full'>
-          {isSubmitting ? <Loader className='animate-spin' /> : ""}
+          {isSubmitting ? <Loader className='animate-spin' /> : <Check />}
           Submit
         </Button>
       </form>

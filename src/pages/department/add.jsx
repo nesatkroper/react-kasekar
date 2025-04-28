@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useDispatch } from "react-redux";
 import { FormInput, FormTextArea } from "@/components/app/form";
 import { toast } from "sonner";
-import { Loader } from "lucide-react";
+import { Check, Loader } from "lucide-react";
 import { getDepartments } from "@/contexts/reducer/department-slice";
 import {
   DialogContent,
@@ -89,7 +89,7 @@ const DepartmentAdd = ({ onSuccess }) => {
         </div>
 
         <Button type='submit' disabled={isSubmitting} className='w-full'>
-          {isSubmitting ? <Loader className='animate-spin' /> : ""}
+          {isSubmitting ? <Loader className='animate-spin' /> : <Check />}
           Submit
         </Button>
       </form>

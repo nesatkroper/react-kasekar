@@ -10,7 +10,7 @@ import { useFormHandler } from "@/hooks/use-form-handler";
 import { showToast } from "@/components/app/toast";
 import { FormComboBox, FormInput, FormTextArea } from "@/components/app/form";
 import { toast } from "sonner";
-import { Loader } from "lucide-react";
+import { Check, Loader } from "lucide-react";
 // import { handleSendNotification } from "@/components/app/notification/handle-notification";
 import {
   DialogContent,
@@ -108,7 +108,7 @@ const PositionAdd = ({ onSuccess }) => {
           />
         </div>
         <Button type='submit' disabled={isSubmitting} className='w-full'>
-          {isSubmitting ? <Loader className='animate-spin' /> : ""}
+          {isSubmitting ? <Loader className='animate-spin' /> : <Check />}
           Submit
         </Button>
       </form>

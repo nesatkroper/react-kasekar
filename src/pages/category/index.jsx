@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Layout from "@/layout/layout";
+import Layout from "@/layout/index.jsx";
 import ProductCategoryAdd from "./add.jsx";
 import AppDataTable from "@/components/app/table/app-data-table.jsx";
 import { CategoryColumns } from "./columns.jsx";

@@ -1,6 +1,7 @@
 import { getCarts } from "./cart-slice";
 import { getCities } from "./city-slice";
 import { getCustomers } from "./customer-slice";
+import { getCustomerInfos } from "./customerinfo-slice";
 import { getDepartments } from "./department-slice";
 import { getEmployees } from "./employee-slice";
 import { getPositions } from "./position-slice";
@@ -14,6 +15,7 @@ export {
   getCarts,
   getCities,
   getCustomers,
+  getCustomerInfos,
   getDepartments,
   getEmployees,
   getPositions,

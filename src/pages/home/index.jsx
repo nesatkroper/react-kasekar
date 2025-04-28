@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
-import Layout from "@/layout/layout";
+import Layout from "@/layout";
 import { useDispatch, useSelector } from "react-redux";
-import { getUser } from "@/contexts/reducer/user-slice";
+import { getUsers } from "@/contexts/reducer/user-slice";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,11 +16,13 @@ import {
 
 const Home = () => {
   const dispatch = useDispatch();
-  const { usrData } = useSelector((state) => state.user);
+  const { data: usrData } = useSelector((state) => state.user);
 
   useEffect(() => {
-    dispatch(getUser());
+    dispatch(getUsers());
   }, [dispatch]);
+
+  console.log(usrData);
 
   return (
     <Layout>

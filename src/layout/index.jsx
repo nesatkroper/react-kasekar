@@ -6,7 +6,7 @@ import AppHeader from "@/components/app/admin/header";
 
 export default function Layout({ children, className }) {
   return (
-    <SidebarProvider defaultOpen={true}>
+    <SidebarProvider defaultOpen={false}>
       <AppSidebar />
       <SidebarInset>
         <AppHeader />
