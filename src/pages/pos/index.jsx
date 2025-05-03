@@ -21,7 +21,7 @@ const POS = () => {
   );
 
   useEffect(() => {
-    dispatch(getProducts({ category: true }));
+    dispatch(getProducts({ params: { category: true } }));
     dispatch(getCode());
   }, [dispatch]);
 

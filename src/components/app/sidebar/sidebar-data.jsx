@@ -6,6 +6,7 @@ import {
   Settings2,
   SquareTerminal,
   ClipboardPen,
+  HomeIcon,
 } from "lucide-react";
 
 export const data = {
@@ -35,6 +36,10 @@ export const data = {
         {
           title: "pro-cate",
           url: "category",
+        },
+        {
+          title: "pro-brand",
+          url: "brand",
         },
       ],
     },
@@ -97,6 +102,11 @@ export const data = {
     },
   ],
   projects: [
+    {
+      name: "home",
+      url: "home",
+      icon: HomeIcon,
+    },
     {
       name: "dash",
       url: "dashboard",

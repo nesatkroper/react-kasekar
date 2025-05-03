@@ -31,6 +31,7 @@ const FormComboBox = ({
   defaultValue = "",
   error,
   className,
+  required,
 }) => {
   const filter = (item || []).map((d) => ({
     value: String(d[optID]),
@@ -48,7 +49,9 @@ const FormComboBox = ({
 
   return (
     <div className={className}>
-      <Label className={labelClass}>{label}</Label>
+      <Label className={labelClass}>
+        {label} {required ? <span className='text-red-700'>*</span> : ""}
+      </Label>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
@@ -119,6 +122,7 @@ FormComboBox.propTypes = {
   item: PropTypes.arrayOf(PropTypes.shape({}).isRequired),
   defaultValue: PropTypes.string,
   className: PropTypes.string,
+  required: PropTypes.bool,
 };
 
 export default FormComboBox;

@@ -1,5 +1,5 @@
 {
-  "app-name": "Nun Reservation",
+  "app-name": "Nun Kasekar",
   "subtitle": "Enterprise Management System",
   "cancel": "Cancel",
   "save": "Save",
@@ -28,7 +28,7 @@
     "pro": "Product",
     "all-pro": "Product",
     "pro-cate": "Category",
-    "pro-brand": "Product Brand",
+    "pro-brand": "Brand",
     "cate": "Category",
     "brand": "Brand",
     "sup": "Supplier",
@@ -110,6 +110,7 @@
     "action": "Action",
     "address": "Adress",
     "desc": "Description",
+    "price": "Price",
     "opt": {
       "act": "Actions",
       "ope": "Open menu",
@@ -154,6 +155,14 @@
     "cate": {
       "name": "Category Name",
       "code": "Category Code"
+    },
+    "pro": {
+      "name": "Product Name",
+      "code": "Product Code",
+      "cate": "Category",
+      "cost": "Cost Price",
+      "sell": "Sell Price",
+      "unit": "Unit"
     }
   },
   "toast": {

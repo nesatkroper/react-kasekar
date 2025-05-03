@@ -62,7 +62,11 @@ export const generateColumns = (
       if (field.key === "status" || field.key === "isAc")
         return <Checkbox checked={value === "active"} disabled={true} />;
 
-      if (field.key === "salary" || field.key === "price")
+      if (
+        field.key === "salary" ||
+        field.key === "price" ||
+        field.key.includes("Price")
+      )
         return <div>{cDollar(value)}</div>;
 
       if (field.key === "discountRate")
@@ -71,8 +75,8 @@ export const generateColumns = (
       if (field.key === "size")
         return <div>{toUnit(value, 2, t("table.room.m"))}</div>;
 
-      if (field.key === "capacity")
-        return <div>{toUnit(value, 0, t("table.room.peo"))}</div>;
+      // if (field.key === "capacity")
+      //   return <div>{toUnit(value, 0, t("table.room.peo"))}</div>;
 
       if (field.key === "email")
         return <div className='font-semibold'>{value}</div>;
@@ -87,7 +91,7 @@ export const generateColumns = (
         const lastName = row.original.lastName || "";
 
         return (
-          <div className='capitalize'>
+          <div className='capitalize font-semibold'>
             {`${firstName} ${lastName}`.trim() || "N/A"}
           </div>
         );
@@ -102,7 +106,7 @@ export const generateColumns = (
         console.log(firstName);
 
         return (
-          <div className='capitalize'>
+          <div className='capitalize font-semibold'>
             {`${firstName} ${lastName}`.trim() || "N/A"}
           </div>
         );
@@ -133,7 +137,7 @@ export const generateColumns = (
             crossOrigin='anonymous'
             alt={value}
             onError={(e) => (e.target.src = defimg)}
-            className='h-[80px] rounded-lg'
+            className='h-[120px] rounded-lg'
           />
         );
 

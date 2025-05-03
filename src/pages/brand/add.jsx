@@ -1,42 +1,44 @@
 import React, { useState } from "react";
 import axiosInstance from "@/lib/axios-instance";
-import FormInput from "@/components/app/form/form-input";
-import PropTypes from "prop-types";
-import FormTextArea from "@/components/app/form/form-textarea";
-import FormImagePreview from "@/components/app/form/form-image-preview";
-import FormImageResize from "@/components/app/form/form-image-resize";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { useDispatch } from "react-redux";
-import { apiUrl } from "@/constants/api";
-import { getCategorys } from "@/contexts/reducer/category-slice";
 import { useFormHandler } from "@/hooks/use-form-handler";
-import { Check, Loader } from "lucide-react";
-import { toast } from "sonner";
+import { getCategorys } from "@/contexts/reducer/category-slice";
 import { showToast } from "@/components/app/toast";
+import { toast } from "sonner";
+import { Check, Loader } from "lucide-react";
 import {
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  FormImagePreview,
+  FormImageResize,
+  FormInput,
+  FormTextArea,
+} from "@/components/app/form";
+import PropTypes from "prop-types";
 
-const CategoryEdit = ({ items = {}, onSuccess }) => {
+const CategoryAdd = ({ onSuccess }) => {
   const dispatch = useDispatch();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const {
     formData,
-    getFormDataForSubmission,
+    resetForm,
     handleChange,
     handleImageData,
-    resetForm,
+    getFormDataForSubmission,
   } = useFormHandler({
-    picture: items?.picture,
-    categoryName: items?.categoryName,
-    categoryCode: items?.categoryCode,
-    memo: items?.memo,
+    picture: "",
+    categoryName: "",
+    categoryCode: "",
+    memo: "",
+    status: "active",
   });
 
-  const handleFormSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     const toastId = showToast("Loading...", "info", true, {
@@ -45,17 +47,14 @@ const CategoryEdit = ({ items = {}, onSuccess }) => {
 
     try {
       const submissionData = getFormDataForSubmission();
-      const response = await axiosInstance.put(
-        `/category/${items.categoryId}`,
-        submissionData
-      );
+      const response = await axiosInstance.post("/category", submissionData);
 
       setTimeout(() => {
         toast.dismiss(toastId);
 
         if (response.status === 201)
           showToast(
-            `${formData.categoryName} Update Successfully.`,
+            `${formData.categoryName} Add Successfully.`,
             "success",
             false,
             {
@@ -72,48 +71,38 @@ const CategoryEdit = ({ items = {}, onSuccess }) => {
     } catch (err) {
       setIsSubmitting(false);
       toast.dismiss(toastId);
-      showToast("Failed to update department", "error");
+      showToast("Failed to add category", "error");
       console.log(err);
     }
   };
 
-  console.log(formData.picture);
-
   return (
     <DialogContent className='max-w-[500px] p-4'>
-      <form onSubmit={handleFormSubmit}>
-        <DialogHeader className='mb-3'>
-          <DialogTitle className='text-md'>
-            Product Category Details Information
-          </DialogTitle>
+      <form onSubmit={handleSubmit} className='space-y-4'>
+        <DialogHeader>
+          <DialogTitle className='text-md'>Category Details</DialogTitle>
         </DialogHeader>
         <Separator />
+
         <div className='grid sm:grid-cols-2 gap-3'>
           <FormInput
             onCallbackInput={handleChange}
+            label='Product Category Name*'
             name='categoryName'
-            value={formData.categoryName || ""}
-            label='Category Name'
+            type='text'
           />
           <FormImageResize
             onCallbackFormData={handleImageData}
-            resolution={600}
+            resolution={400}
           />
           <FormTextArea
             onCallbackInput={handleChange}
-            label='Description'
             name='memo'
-            value={formData.memo || "N/A"}
-            rows={7}
+            label='Description'
           />
-
           <FormImagePreview
             imgSrc={
-              formData.picture instanceof File
-                ? URL.createObjectURL(formData.picture)
-                : formData.picture
-                ? `${apiUrl}/uploads/${formData.picture}`
-                : null
+              formData.picture ? URL.createObjectURL(formData.picture) : null
             }
           />
         </div>
@@ -126,9 +115,8 @@ const CategoryEdit = ({ items = {}, onSuccess }) => {
   );
 };
 
-CategoryEdit.propTypes = {
-  items: PropTypes.object,
+CategoryAdd.propTypes = {
   onSuccess: PropTypes.func,
 };
 
-export default CategoryEdit;
+export default CategoryAdd;

@@ -3,6 +3,7 @@ import Signin from "./signin";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import {
   LockKeyhole,
@@ -162,7 +163,10 @@ const Auth = () => {
                       </div>
 
                       <div className='grid grid-cols-2 gap-4'>
-                        <button className='flex items-center justify-center space-x-2 p-2 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors'>
+                        <Button
+                          disabled
+                          variant='outline'
+                          className='flex items-center justify-center space-x-2 p-2 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors'>
                           <svg className='w-5 h-5' viewBox='0 0 24 24'>
                             <path
                               d='M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z'
@@ -184,8 +188,11 @@ const Auth = () => {
                           <span className='text-sm text-slate-600'>
                             Google SSO
                           </span>
-                        </button>
-                        <button className='flex items-center justify-center space-x-2 p-2 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors'>
+                        </Button>
+                        <Button
+                          disabled
+                          variant='outline'
+                          className='flex items-center justify-center space-x-2 p-2 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors'>
                           <svg
                             className='w-5 h-5'
                             fill='currentColor'
@@ -193,15 +200,18 @@ const Auth = () => {
                             <path d='M12 1.27a11 11 0 00-3.48 21.46c.55.09.73-.24.73-.53v-1.85c-3.03.66-3.67-1.45-3.67-1.45-.55-1.29-1.28-1.65-1.28-1.65-1.03-.7.08-.69.08-.69 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.67 1.24 3.32.95.1-.76.4-1.27.73-1.57-2.42-.28-4.97-1.21-4.97-5.38 0-1.19.42-2.16 1.13-2.92-.11-.28-.49-1.4.11-2.91 0 0 .93-.3 3.05 1.13.88-.25 1.83-.36 2.77-.37.94 0 1.89.13 2.77.36 2.12-1.43 3.05-1.13 3.05-1.13.6 1.51.22 2.64.1 2.91.7.76 1.13 1.73 1.13 2.92 0 4.17-2.55 5.1-4.98 5.37.39.34.74 1.01.74 2.02v3c0 .29.19.63.74.53A11 11 0 0012 1.27' />
                           </svg>
                           <span className='text-sm text-slate-600'>GitHub</span>
-                        </button>
+                        </Button>
                       </div>
 
                       <div className='mt-6 text-center'>
                         <p className='text-sm text-slate-500'>
                           Need assistance?{" "}
-                          <span className='text-indigo-600 font-medium hover:underline cursor-pointer'>
+                          <a
+                            href='https://t.me/devphanun'
+                            target='blank'
+                            className='text-indigo-600 font-medium hover:underline cursor-pointer'>
                             Contact IT Support
-                          </span>
+                          </a>
                         </p>
                       </div>
                     </TabsContent>
@@ -275,7 +285,7 @@ const Auth = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8, duration: 0.5 }}
             className='mt-8 text-center'>
-            <div className='text-xs text-slate-500 space-x-4'>
+            <div className='text-sm text-slate-500 space-x-4'>
               <span className='hover:text-slate-700 cursor-pointer'>
                 Privacy Policy
               </span>
@@ -286,7 +296,7 @@ const Auth = () => {
                 Help Center
               </span>
             </div>
-            <div className='mt-2 text-xs text-slate-400'>
+            <div className='mt-2 text-sm text-slate-400'>
               © {new Date().getFullYear()} Dev Suon Phanun. All rights reserved.
             </div>
           </motion.div>

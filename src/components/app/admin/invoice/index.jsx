@@ -49,34 +49,38 @@ const Invoice = (props) => {
   };
 
   const handleSaveAsJPG = async () => {
-    const originalCard = cardRef.current;
+    try {
+      const originalCard = cardRef.current;
 
-    const clonedCard = originalCard.cloneNode(true);
-    clonedCard.style.maxHeight = "none";
-    clonedCard.style.overflow = "visible";
-    clonedCard.style.position = "absolute";
-    clonedCard.style.top = "-9999px";
-    document.body.appendChild(clonedCard);
+      const clonedCard = originalCard.cloneNode(true);
+      clonedCard.style.maxHeight = "none";
+      clonedCard.style.overflow = "visible";
+      clonedCard.style.position = "absolute";
+      clonedCard.style.top = "-9999px";
+      document.body.appendChild(clonedCard);
 
-    await new Promise((resolve) => setTimeout(resolve, 300));
+      await new Promise((resolve) => setTimeout(resolve, 300));
 
-    const canvas = await html2canvas(clonedCard, {
-      scale: 3,
-      useCORS: true,
-    });
+      const canvas = await html2canvas(clonedCard, {
+        scale: 3,
+        useCORS: true,
+      });
 
-    const imageData = canvas.toDataURL("image/jpeg", 1.0);
-    const link = document.createElement("a");
-    link.href = imageData;
-    link.download = "invoice.jpg";
-    link.click();
+      const imageData = canvas.toDataURL("image/jpeg", 1.0);
+      const link = document.createElement("a");
+      link.href = imageData;
+      link.download = "invoice.jpg";
+      link.click();
 
-    document.body.removeChild(clonedCard);
+      document.body.removeChild(clonedCard);
 
-    const file = dataURLtoFile(imageData, "invoice.jpg");
-    const filePath = await uploadToServer(file);
+      const file = dataURLtoFile(imageData, "invoice.jpg");
+      const filePath = await uploadToServer(file);
 
-    return filePath;
+      return filePath;
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const dataURLtoFile = (dataurl, filename) => {

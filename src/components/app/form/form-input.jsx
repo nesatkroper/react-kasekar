@@ -27,7 +27,9 @@ const FormInput = ({
 
   return (
     <div className={`columns-1 ${mainClass}`}>
-      <Label className={`${labelClass}`}>{label}</Label>
+      <Label className={`${labelClass}`}>
+        {label} {required ? <span className='text-red-700'>*</span> : ""}
+      </Label>
       <Input
         onChange={handleChange}
         value={value}

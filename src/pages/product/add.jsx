@@ -35,9 +35,12 @@ const ProductAdd = ({ onSuccess }) => {
     productCode: "",
     categoryId: "",
     picture: "",
+    unit: "",
+    capacity: "",
+    sellPrice: 0,
+    costPrice: 0,
     discountRate: 0,
     status: "active",
-    price: 0,
   });
 
   const handleSubmit = async (e) => {
@@ -69,7 +72,7 @@ const ProductAdd = ({ onSuccess }) => {
       }, 100);
 
       resetForm();
-      dispatch(getProducts());
+      dispatch(getProducts({ params: { category: true } }));
     } catch (err) {
       setIsSubmitting(false);
       toast.dismiss(toastId);
@@ -91,39 +94,72 @@ const ProductAdd = ({ onSuccess }) => {
           </DialogTitle>
         </DialogHeader>
         <Separator />
-        <div className='grid sm:grid-cols-2 gap-3 mb-3'>
+        <div className='grid sm:grid-cols-2 gap-3 my-3'>
           <FormInput
             onCallbackInput={handleChange}
-            label='Product Name*'
+            label='Product Name'
             name='productName'
             type='text'
+            required
           />
+
           <FormComboBox
             onCallbackSelect={(event) => handleChange("categoryId", event)}
-            label='Category*'
+            label='Category'
             item={pcaData}
             optID='categoryId'
             optLabel='categoryName'
+            required
           />
 
           <FormInput
             onCallbackInput={handleChange}
-            label='Price*'
-            name='price'
-            type='number'
-            placeholder='$ 39.99'
+            label='Product Unit'
+            name='unit'
+            type='text'
+            required
           />
+
           <FormInput
             onCallbackInput={handleChange}
-            label='Discount Rate*'
+            label='Capacity'
+            name='capacity'
+            type='text'
+            placeholder='1.00'
+            required
+          />
+
+          <FormInput
+            onCallbackInput={handleChange}
+            label='Cost Price'
+            name='costPrice'
+            type='number'
+            placeholder='$ 39.99'
+            required
+          />
+
+          <FormInput
+            onCallbackInput={handleChange}
+            label='Sell Price'
+            name='sellPrice'
+            type='number'
+            placeholder='$ 39.99'
+            required
+          />
+
+          <FormInput
+            onCallbackInput={handleChange}
+            label='Discount Rate'
             name='discountRate'
             type='number'
             placeholder='5 %'
-            step={1}
+            step={0.01}
+            required
           />
           <FormImageResize
             onCallbackFormData={handleImageData}
             resolution={400}
+            required
           />
           <FormImagePreview
             imgSrc={

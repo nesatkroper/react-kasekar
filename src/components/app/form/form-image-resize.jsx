@@ -20,7 +20,11 @@ import {
 } from "@/components/ui/alert-dialog";
 import PropTypes from "prop-types";
 
-const FormImageResize = ({ onCallbackFormData, resolution = 600 }) => {
+const FormImageResize = ({
+  onCallbackFormData,
+  resolution = 600,
+  required,
+}) => {
   const [imageSrc, setImageSrc] = useState(defimg);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -127,7 +131,9 @@ const FormImageResize = ({ onCallbackFormData, resolution = 600 }) => {
 
   return (
     <div className='columns-1'>
-      <Label>Choose Image*</Label>
+      <Label>
+        Choose Image {required ? <span className='text-red-700'>*</span> : ""}
+      </Label>
       <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <AlertDialogTrigger asChild>
           <div className='relative'>
@@ -286,6 +292,7 @@ AspectRatioOption.propTypes = {
   height: PropTypes.number,
   isSelected: PropTypes.bool,
   onClick: PropTypes.func,
+  required: PropTypes.bool,
 };
 
 export default FormImageResize;

@@ -15,10 +15,12 @@ export const ProductColumns = () => {
   return generateColumns(
     [
       { key: "picture", label: t("table.pic") },
-      { key: "productName", label: t("table.cate.name") },
-      { key: "productCode", label: t("table.cate.code") },
-      { key: "category.categoryName", label: t("table.cate.code") },
-      { key: "price", label: t("table.cate.code") },
+      { key: "productName", label: t("table.pro.name") },
+      { key: "productCode", label: t("table.pro.code") },
+      { key: "category.categoryName", label: t("table.pro.cate") },
+      { key: "costPrice", label: t("table.pro.cost") },
+      { key: "sellPrice", label: t("table.pro.sell") },
+      { key: "capacity", label: t("table.pro.unit") },
       { key: "discountRate", label: t("table.desc") },
       { key: "status", label: t("table.status") },
     ],

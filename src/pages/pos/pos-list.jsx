@@ -10,27 +10,23 @@ import { getCarts } from "@/contexts/reducer/cart-slice";
 import { Plus } from "lucide-react";
 import { cDollar } from "@/utils/dec-format";
 import { getMe } from "@/contexts/reducer";
-import Cookies from "js-cookie";
 
 const POSList = ({ data = {} }) => {
   const dispatch = useDispatch();
   const { data: crtData } = useSelector((state) => state.cart);
-  const userInfo = Cookies.get("user-info");
-
-  console.log(userInfo);
+  const { data: meData } = useSelector((state) => state.me);
 
   const handleAddToCart = async (item) => {
     const isAlreadyAdd = crtData?.some(
       (cartItem) => cartItem.productId === item.productId
     );
     console.log("Is already added:", isAlreadyAdd);
-    console.log(item);
 
     try {
       if (!isAlreadyAdd) {
-        const newItem = { authId: userInfo.authId, productId: item.productId };
+        const newItem = { authId: meData[0].authId, productId: item.productId };
         const response = await axiosAuth.post("/cart", newItem);
-        dispatch(getCarts({ id: userInfo.authId }));
+        dispatch(getCarts({ id: meData[0].authId }));
         console.log("Cart submitted successfully:", response.data);
       } else {
         try {
@@ -40,7 +36,7 @@ const POSList = ({ data = {} }) => {
 
           const cartID = cartItem ? cartItem.cartId : null;
           const inc = await axiosAuth.put(`/cart/inc/${cartID}`);
-          dispatch(getCarts({ id: userInfo.authId }));
+          dispatch(getCarts({ id: meData[0].authId }));
           console.log("Item is already in the cart.", inc);
         } catch (err) {
           console.log(err);
@@ -61,11 +57,14 @@ const POSList = ({ data = {} }) => {
         <Card
           key={item.productId}
           onClick={() => handleAddToCart(item)}
-          className='relative cursor-pointer shadow-none'>
+          className='relative cursor-pointer'>
           <CardContent className='p-0 relative'>
-            <Button className='absolute top-2 left-2 h-6 font-normal px-2'>
+            <Button
+              type='button'
+              className='absolute top-2 left-2 h-6 font-normal px-2'>
               <Plus /> Note
             </Button>
+
             <img
               src={`${apiUrl}/uploads/${item?.picture}`}
               crossOrigin='anonymous'
@@ -74,11 +73,15 @@ const POSList = ({ data = {} }) => {
               className='rounded-t-lg h-full w-full object-cover'
             />
             <div className='px-3 pt-1 flex justify-between'>
-              <p className='font-semibold text-md'>{item?.productName}</p>
-              <p className='font-bold text-red-500'>{cDollar(item?.price)}</p>
+              <p className='font-semibold'>{item?.productName}</p>
+              <p className='font-bold text-red-500'>
+                {cDollar(item?.sellPrice)}
+              </p>
             </div>
             <div className='px-3 pb-2 flex justify-between text-xs'>
-              <p>{item?.category?.categoryName ?? "Uncategorized"}</p>
+              <p className='text-sm'>
+                {item?.category?.categoryName ?? "Uncategorized"}
+              </p>
               <p className='font-bold text-red-500'>
                 {item?.discountRate <= 0
                   ? ""

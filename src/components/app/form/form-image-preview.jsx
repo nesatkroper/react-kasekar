@@ -9,11 +9,12 @@ const FormImagePreview = ({
   imgClass = "",
   label = "Picture Preview",
   underLine = false,
+  required,
 }) => {
   return (
     <div className='columns-1'>
       <Label className={`${labelClass} ${underLine ? "underline" : ""}`}>
-        {label}
+        {label} {required ? <span className='text-red-700'>*</span> : ""}
       </Label>
       <img
         src={imgSrc || defimg}
@@ -32,5 +33,6 @@ FormImagePreview.propTypes = {
   size: PropTypes.number,
   label: PropTypes.string,
   underLine: PropTypes.bool,
+  required: PropTypes.bool,
 };
 export default FormImagePreview;

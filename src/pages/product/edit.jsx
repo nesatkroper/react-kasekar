@@ -32,12 +32,16 @@ const ProductEdit = ({ items = {}, onSuccess }) => {
     resetForm,
     getFormDataForSubmission,
   } = useFormHandler({
-    productName: items.productName,
-    productCode: items.productCode,
-    categoryId: items.categoryId,
-    picture: items.picture,
-    discountRate: items.discountRate,
-    status: items.status,
+    productName: items?.productName,
+    productCode: items?.productCode,
+    categoryId: items?.categoryId,
+    picture: items?.picture,
+    unit: items?.unit,
+    capacity: items?.capacity,
+    sellPrice: items?.sellPrice,
+    costPrice: items?.costPrice,
+    discountRate: items?.discountRate,
+    status: items?.status,
   });
 
   const handleSubmit = async (e) => {
@@ -94,37 +98,63 @@ const ProductEdit = ({ items = {}, onSuccess }) => {
           </DialogTitle>
         </DialogHeader>
         <Separator />
-        <div className='grid sm:grid-cols-2 gap-3'>
+        <div className='grid sm:grid-cols-2 gap-3 my-3'>
           <FormInput
             onCallbackInput={handleChange}
-            label='Product Name*'
+            label='Product Name'
             name='productName'
             value={formData.productName}
             type='text'
-          />
-          <FormInput
-            onCallbackInput={handleChange}
-            label='Product Code*'
-            name='productCode'
-            value={formData.productCode}
-            readonly
-          />
-          <FormComboBox
-            onCallbackSelect={(event) => handleChange("categoryId", event)}
-            label='Category*'
-            item={pcaData}
-            optID='categoryId'
-            optLabel='categoryName'
+            required
           />
 
           <FormInput
             onCallbackInput={handleChange}
-            label='Price*'
-            name='price'
-            value={formData.price}
+            label='Product Code'
+            name='productCode'
+            value={formData.productCode.toUpperCase()}
+            readonly
+            required
+          />
+
+          <FormComboBox
+            onCallbackSelect={(event) => handleChange("categoryId", event)}
+            label='Category'
+            item={pcaData}
+            optID='categoryId'
+            optLabel='categoryName'
+            required
+          />
+
+          <FormInput
+            onCallbackInput={handleChange}
+            label='Product Unit'
+            name='unit'
+            value={formData.unit}
+            type='text'
+            required
+          />
+
+          <FormInput
+            onCallbackInput={handleChange}
+            label='Cost Price'
+            name='costPrice'
+            value={formData.costPrice}
             type='number'
             placeholder='$ 39.99'
+            required
           />
+
+          <FormInput
+            onCallbackInput={handleChange}
+            label='Sell Price'
+            name='sellPrice'
+            value={formData.sellPrice}
+            type='number'
+            placeholder='$ 39.99'
+            required
+          />
+
           <FormInput
             onCallbackInput={handleChange}
             label='Discount Rate*'
@@ -134,16 +164,28 @@ const ProductEdit = ({ items = {}, onSuccess }) => {
             placeholder='5 %'
             step={1}
           />
+
+          <FormInput
+            onCallbackInput={handleChange}
+            label='Capacity'
+            name='capacity'
+            value={formData.capacity}
+            type='number'
+            placeholder='1'
+            required
+          />
+
           <FormImageResize
             onCallbackFormData={handleImageData}
             resolution={400}
           />
+
           <FormImagePreview
             imgSrc={
-              formData.picture
-                ? `${apiUrl}/uploads/${formData.picture}`
-                : formData.picture
+              formData.picture instanceof File
                 ? URL.createObjectURL(formData.picture)
+                : formData.picture
+                ? `${apiUrl}/uploads/${formData.picture}`
                 : null
             }
           />
