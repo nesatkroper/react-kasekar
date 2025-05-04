@@ -16,7 +16,23 @@ export const ROLE = [
     data: "Sale (For General Staff)",
   },
   {
-    value: "user",
-    data: "User (View Landing Only)",
+    value: "client",
+    data: "Client (View Landing Only)",
   },
 ];
+
+export const ROLES = {
+  ADMIN: "admin",
+  CLIENT: "client",
+  MANAGEMENT: "management",
+  ACCOUNTANT: "accountant",
+  SALE: "sale",
+};
+
+export const ROLE_HIERARCHY = {
+  [ROLES.ADMIN]: 100,
+  [ROLES.MANAGEMENT]: 80,
+  [ROLES.ACCOUNTANT]: 60,
+  [ROLES.SALE]: 40,
+  [ROLES.CLIENT]: 20,
+};

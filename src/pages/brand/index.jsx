@@ -9,7 +9,7 @@ import {
   getCategorys,
 } from "@/contexts/reducer/category-slice.jsx";
 
-const ProductCategory = () => {
+const Brand = () => {
   const dispatch = useDispatch();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { data: pcaData, loading: pcaLoading } = useSelector(
@@ -46,4 +46,4 @@ const ProductCategory = () => {
   );
 };
 
-export default ProductCategory;
+export default Brand;

@@ -22,8 +22,6 @@ const Product = () => {
     dispatch(getProducts({ params: { category: true } }));
   };
 
-  console.log(proData);
-
   return (
     <Layout>
       <AppDataTable

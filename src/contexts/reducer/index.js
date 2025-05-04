@@ -10,6 +10,7 @@ import { getProducts } from "./product-slice";
 import { getStates } from "./state-slice";
 import { getGroupMessages } from "./group-message-slice";
 import { getMe } from "./me-slice";
+import { getRoles } from "./role-slice";
 
 export {
   getCarts,
@@ -24,4 +25,5 @@ export {
   getStates,
   getGroupMessages,
   getMe,
+  getRoles,
 };

@@ -10,7 +10,8 @@ export default function Layout({ children, className }) {
       <AppSidebar />
       <SidebarInset>
         <AppHeader />
-        <div className={`relative flex flex-1 flex-col gap-4 p-3 ${className}`}>
+        <div
+          className={`relative flex flex-1 flex-col gap-4 p-3 bg-muted/60 ${className}`}>
           {children}
         </div>
       </SidebarInset>

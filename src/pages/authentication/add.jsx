@@ -52,7 +52,7 @@ const AuthenticationAdd = ({ onSuccess }) => {
       }, 100);
 
       resetForm();
-      dispatch(getAuth());
+      dispatch(getAuth({ params: { employee: true } }));
     } catch (err) {
       setIsSubmitting(false);
       toast.dismiss(toastId);

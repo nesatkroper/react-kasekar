@@ -11,7 +11,6 @@ export const createApiThunk = (name, endpoint, options = {}) => {
       { rejectWithValue }
     ) => {
       try {
-        console.log(id);
         let response;
         const queryParams = new URLSearchParams(params).toString();
 

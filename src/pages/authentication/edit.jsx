@@ -1,25 +1,25 @@
-import { FormComboBox, FormInput, FormSelect } from "@/components/app/form";
+import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
+import axiosAuth from "@/lib/axios-auth";
+import { FormComboBox, FormInput } from "@/components/app/form";
 import { showToast } from "@/components/app/toast";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { getAuth } from "@/contexts/reducer/auth-slice";
+import { useFormHandler } from "@/hooks/use-form-handler";
+import { Check, Loader } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "sonner";
 import {
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Separator } from "@/components/ui/separator";
-import { ROLE } from "@/constants/role";
-import { getAuth } from "@/contexts/reducer/auth-slice";
-import { useFormHandler } from "@/hooks/use-form-handler";
-import axiosAuth from "@/lib/axios-auth";
-import { Check, Loader } from "lucide-react";
-import PropTypes from "prop-types";
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { toast } from "sonner";
+import { getRoles } from "@/contexts/reducer";
 
 const AuthenticationEdit = ({ items = {}, onSuccess }) => {
   const dispatch = useDispatch();
-  const { data: empData } = useSelector((state) => state.employees);
+  const { data: rolData } = useSelector((state) => state.roles);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { formData, handleChange, resetForm } = useFormHandler({
     departmentId: items?.departmentId,
@@ -27,6 +27,8 @@ const AuthenticationEdit = ({ items = {}, onSuccess }) => {
     password: items?.password,
     role: items?.role,
   });
+
+  console.log(rolData);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -51,7 +53,7 @@ const AuthenticationEdit = ({ items = {}, onSuccess }) => {
       }, 100);
 
       resetForm();
-      dispatch(getAuth());
+      dispatch(getAuth({ params: { employee: true } }));
     } catch (err) {
       setIsSubmitting(false);
       toast.dismiss(toastId);
@@ -59,6 +61,10 @@ const AuthenticationEdit = ({ items = {}, onSuccess }) => {
       console.log(err);
     }
   };
+
+  useEffect(() => {
+    getRoles();
+  }, [dispatch]);
 
   return (
     <DialogContent className='max-w-[350px] p-4'>
@@ -70,20 +76,21 @@ const AuthenticationEdit = ({ items = {}, onSuccess }) => {
         </DialogHeader>
         <Separator className='my-3' />
         <div className='grid gap-3 mb-3'>
-          <FormComboBox
+          <FormInput
             onCallbackSelect={(e) => handleChange("departmentId", e)}
             name='departmentId'
             label='Employee'
-            item={empData}
-            optID='employeeId'
-            optLabel='lastName'
+            value={`${items?.employee?.firstName} ${items?.employee?.lastName}`}
+            readonly
+            required
           />
-          <FormSelect
-            onCallbackSelect={(e) => handleChange("role", e)}
+          <FormComboBox
+            onCallbackSelect={(e) => handleChange("roleId", e)}
+            name='roleId'
             label='Role'
-            item={ROLE}
-            optID='value'
-            optLabel='data'
+            item={rolData}
+            optID='roleId'
+            optLabel='name'
           />
 
           <FormInput

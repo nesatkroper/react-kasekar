@@ -5,6 +5,9 @@ import { defineConfig } from "vite";
 export default defineConfig({
   base: "/",
   plugins: [react()],
+  optimizeDeps: {
+    include: ["react-router-dom"],
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

@@ -12,12 +12,9 @@ const Authentication = () => {
   const { authData, authLoading } = useSelector((state) => state.auths);
 
   useEffect(() => {
-    dispatch(getAuth());
+    dispatch(getAuth({ params: { employee: true } }));
   }, [dispatch]);
 
-  console.log(authData);
-
-  console.log(authData);
   return (
     <Layout>
       <AppDataTable

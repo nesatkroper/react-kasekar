@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import FormInput from "@/components/app/form/form-input";
 import axiosAuth from "@/lib/axios-auth";
-import Cookies from "js-cookie";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +8,7 @@ import { useAuth } from "@/providers/auth-provider";
 import { Loader2 } from "lucide-react";
 import { useFormHandler } from "@/hooks/use-form-handler";
 import { showToast } from "@/components/app/toast";
+import { setAuthData } from "@/providers/user-provider";
 
 const Signin = () => {
   const navigate = useNavigate();
@@ -40,9 +40,7 @@ const Signin = () => {
       const response = await axiosAuth.post("/auth/login", formData);
 
       setToken(response.data.token);
-      Cookies.set("user-info", JSON.stringify(response.data.auth), {
-        expires: 0.4,
-      });
+      setAuthData(response.data.auth);
 
       navigate("/home", { replace: true });
       showToast(`Welcome ${response.data.auth.email}`);

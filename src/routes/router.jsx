@@ -8,10 +8,13 @@ import {
 } from "react-router-dom";
 
 import NotFound from "@/components/app/404";
+import ForbiddenPage from "@/components/app/403";
 import OfflinePage from "@/components/app/offline";
 import LazyLoading from "@/components/app/loading";
 import ErrorBoundary from "@/components/app/error";
 import RouteTitle from "@/components/app/route-title";
+import RoleRoute from "./permission";
+import { ROLES } from "@/constants/role";
 
 const POS = lazy(() => import("@/pages/pos"));
 const Dashboard = lazy(() => import("@/pages/dashboard"));
@@ -19,7 +22,8 @@ const Department = lazy(() => import("@/pages/department"));
 const Position = lazy(() => import("@/pages/position"));
 const Employee = lazy(() => import("@/pages/employee"));
 const Product = lazy(() => import("@/pages/product"));
-const ProductCategory = lazy(() => import("@/pages/category"));
+const Category = lazy(() => import("@/pages/category"));
+const Brand = lazy(() => import("@/pages/brand"));
 const Authentication = lazy(() => import("@/pages/authentication"));
 const Home = lazy(() => import("@/pages/home"));
 const Auth = lazy(() => import("@/pages/auth"));
@@ -56,6 +60,7 @@ const Routes = () => {
     { path: "*", element: <NotFound /> },
     { path: "/test", element: LazyLoad(Test)() },
     { path: "/offline", element: <OfflinePage /> },
+    { path: "/forbidden", element: <ForbiddenPage /> },
   ];
 
   const routesForAuthenticatedOnly = [
@@ -68,18 +73,55 @@ const Routes = () => {
         </>
       ),
       children: [
-        { path: "/admin/auth", element: <Navigate to='/' /> },
+        { path: "/auth", element: <Navigate to='/' /> },
         { path: "/", element: LazyLoad(Home)() },
         { path: "/home", element: LazyLoad(Home)() },
         { path: "/dashboard", element: LazyLoad(Dashboard)() },
-        { path: "/department", element: LazyLoad(Department)() },
-        { path: "/position", element: LazyLoad(Position)() },
-        { path: "/customer", element: LazyLoad(Customer)() },
-        { path: "/employee", element: LazyLoad(Employee)() },
-        { path: "/pos", element: LazyLoad(POS)() },
-        { path: "/product", element: LazyLoad(Product)() },
-        { path: "/category", element: LazyLoad(ProductCategory)() },
-        { path: "/authentication", element: LazyLoad(Authentication)() },
+        {
+          path: "/department",
+          element: <RoleRoute minimumRole={ROLES.MANAGEMENT} />,
+          children: [{ path: "", element: LazyLoad(Department)() }],
+        },
+        {
+          path: "/position",
+          element: <RoleRoute minimumRole={ROLES.MANAGEMENT} />,
+          children: [{ path: "", element: LazyLoad(Position)() }],
+        },
+        {
+          path: "/customer",
+          element: <RoleRoute minimumRole={ROLES.MANAGEMENT} />,
+          children: [{ path: "", element: LazyLoad(Customer)() }],
+        },
+        {
+          path: "/employee",
+          element: <RoleRoute minimumRole={ROLES.MANAGEMENT} />,
+          children: [{ path: "", element: LazyLoad(Employee)() }],
+        },
+        {
+          path: "/pos",
+          element: <RoleRoute minimumRole={ROLES.MANAGEMENT} />,
+          children: [{ path: "", element: LazyLoad(POS)() }],
+        },
+        {
+          path: "/product",
+          element: <RoleRoute minimumRole={ROLES.MANAGEMENT} />,
+          children: [{ path: "", element: LazyLoad(Product)() }],
+        },
+        {
+          path: "/category",
+          element: <RoleRoute minimumRole={ROLES.MANAGEMENT} />,
+          children: [{ path: "", element: LazyLoad(Category)() }],
+        },
+        {
+          path: "/brand",
+          element: <RoleRoute minimumRole={ROLES.MANAGEMENT} />,
+          children: [{ path: "", element: LazyLoad(Brand)() }],
+        },
+        {
+          path: "/authentication",
+          element: <RoleRoute minimumRole={ROLES.MANAGEMENT} />,
+          children: [{ path: "", element: LazyLoad(Authentication)() }],
+        },
         { path: "*", element: <NotFound /> },
       ],
     },
@@ -87,7 +129,7 @@ const Routes = () => {
 
   const routesForNotAuthenticatedOnly = [
     {
-      path: "/admin/auth",
+      path: "/auth",
       element: (
         <>
           <RouteTitle />

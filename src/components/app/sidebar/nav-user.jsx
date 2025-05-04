@@ -34,7 +34,7 @@ export function NavUser({ user }) {
     try {
       Cookies.remove("token");
       Cookies.remove("auth-info");
-      navigate("/admin/auth");
+      navigate("/auth");
       window.location.reload();
       await axiosAuth.post("/auth/logout");
     } catch (err) {

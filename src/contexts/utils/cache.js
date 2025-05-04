@@ -1,5 +1,5 @@
 import localForage from "localforage";
-import { encrypt, decrypt } from "./cryption";
+import { encrypt, decrypt } from "../../utils/cryption";
 
 const _KEY = import.meta.env.VITE_APP_CACHE_KEY || "-key";
 const _ENCRYPT = false; // Or false to disable encryption for testing

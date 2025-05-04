@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import Layout from "@/layout";
 import AppDataTable from "@/components/app/table/app-data-table";
 import DepartmentAdd from "./add";
+import ForbiddenPage from "@/components/app/403";
 import { DepartmentColumns } from "./columns";
 import { useDispatch, useSelector } from "react-redux";
+import { useRoles } from "@/hooks/use-role";
 import {
   clearCache,
   getDepartments,
@@ -11,10 +13,14 @@ import {
 
 const Department = () => {
   const dispatch = useDispatch();
+  const { hasRole, hasHigherOrEqualRole, ROLES } = useRoles();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { data: depData, loading: depLoading } = useSelector(
     (state) => state.departments
   );
+
+  const canView =
+    hasHigherOrEqualRole(ROLES.MANAGEMENT) || hasRole(ROLES.ADMIN);
 
   const refresh = () => {
     dispatch(clearCache());
@@ -22,8 +28,10 @@ const Department = () => {
   };
 
   useEffect(() => {
-    dispatch(getDepartments({ params: { status: "all" } }));
-  }, [dispatch]);
+    if (canView) dispatch(getDepartments({ params: { status: "all" } }));
+  }, [dispatch, canView]);
+
+  if (!canView) return <ForbiddenPage />;
 
   return (
     <Layout>
