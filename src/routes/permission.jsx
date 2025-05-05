@@ -7,11 +7,11 @@ import { useRoles } from "@/hooks/use-role";
 const RoleRoute = ({ requiredRole, minimumRole }) => {
   const { hasRole, hasHigherOrEqualRole } = useRoles();
 
-  if (requiredRole && hasRole(requiredRole)) {
+  if (requiredRole && !hasRole(requiredRole)) {
     return <ForbiddenPage />;
   }
 
-  if (minimumRole && hasHigherOrEqualRole(minimumRole)) {
+  if (minimumRole && !hasHigherOrEqualRole(minimumRole)) {
     return <ForbiddenPage />;
   }
 

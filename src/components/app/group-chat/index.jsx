@@ -21,7 +21,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { useTranslation } from "react-i18next";
-import LazyLoading from "../../loading";
+import LazyLoading from "@/components/app/loading";
 
 /**
  * @Functional component for a group chat interface.

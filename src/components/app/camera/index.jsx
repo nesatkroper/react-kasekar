@@ -16,7 +16,7 @@ const MAX_IMAGES = 5;
 const WIDTH = 1920;
 const HEIGHT = 1080;
 
-const CameraCapture = () => {
+export const CameraCapture = () => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const streamRef = useRef(null);
@@ -117,9 +117,11 @@ const CameraCapture = () => {
             <span>Open Camera</span>
           </Button>
         </AlertDialogTrigger>
-        <AlertDialogContent className='sm:max-w-md'>
+        <AlertDialogContent className='sm:max-w-md p-4'>
           <AlertDialogHeader>
-            <AlertDialogTitle>Camera Capture</AlertDialogTitle>
+            <AlertDialogTitle className='text-md'>
+              Camera Capture
+            </AlertDialogTitle>
             {cameraError ? (
               <div className='bg-red-50 p-4 rounded-md text-red-600'>
                 <p className='font-medium'>Camera Error</p>
@@ -148,23 +150,50 @@ const CameraCapture = () => {
               </div>
             )}
           </AlertDialogHeader>
+
+          {images.length > 0 && (
+            <div className='space-y-4'>
+              <h3 className='text-base font-medium'>
+                Captured Images ({images.length}/{MAX_IMAGES})
+              </h3>
+              <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4'>
+                {images.map((img, idx) => (
+                  <div key={idx} className='relative group'>
+                    <img
+                      src={img || "/placeholder.svg"}
+                      className='w-full h-auto aspect-video object-cover rounded-md border border-gray-200'
+                      alt={`Captured ${idx + 1}`}
+                    />
+                    <Button
+                      variant='destructive'
+                      size='icon'
+                      className='absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity'
+                      onClick={() => deleteImage(idx)}>
+                      <Trash2 className='h-4 w-4' />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           <AlertDialogFooter className='flex-col sm:flex-row gap-2'>
+            <AlertDialogCancel>Close</AlertDialogCancel>
             {cameraActive ? (
               <>
-                <Button
-                  variant='secondary'
-                  onClick={captureImage}
-                  disabled={images.length >= MAX_IMAGES}
-                  className='w-full sm:w-auto'>
-                  <ImageIcon className='h-4 w-4 mr-2' />
-                  Capture ({images.length}/{MAX_IMAGES})
-                </Button>
                 <Button
                   variant='destructive'
                   onClick={stopCamera}
                   className='w-full sm:w-auto'>
                   <X className='h-4 w-4 mr-2' />
                   Stop Camera
+                </Button>{" "}
+                <Button
+                  onClick={captureImage}
+                  disabled={images.length >= MAX_IMAGES}
+                  className='w-full sm:w-auto'>
+                  <ImageIcon className='h-4 w-4 mr-2' />
+                  Capture ({images.length}/{MAX_IMAGES})
                 </Button>
               </>
             ) : (
@@ -176,38 +205,9 @@ const CameraCapture = () => {
                 Start Camera
               </Button>
             )}
-            <AlertDialogCancel>Close</AlertDialogCancel>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-
-      {images.length > 0 && (
-        <div className='space-y-4'>
-          <h3 className='text-lg font-medium'>
-            Captured Images ({images.length}/{MAX_IMAGES})
-          </h3>
-          <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4'>
-            {images.map((img, idx) => (
-              <div key={idx} className='relative group'>
-                <img
-                  src={img || "/placeholder.svg"}
-                  className='w-full h-auto aspect-video object-cover rounded-md border border-gray-200'
-                  alt={`Captured ${idx + 1}`}
-                />
-                <Button
-                  variant='destructive'
-                  size='icon'
-                  className='absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity'
-                  onClick={() => deleteImage(idx)}>
-                  <Trash2 className='h-4 w-4' />
-                </Button>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 };
-
-export default CameraCapture;

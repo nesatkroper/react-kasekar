@@ -19,11 +19,6 @@ import {
 } from "lucide-react";
 import { DialogContent } from "@/components/ui/dialog";
 
-/**
- * Functional component representing the search bar in the App.
- * @returns JSX element for the AppSearchBar component.
- */
-
 const AppSearchBar = () => {
   return (
     <DialogContent className='p-0 shadow-none border-none '>

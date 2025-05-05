@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app/sidebar/app-sidebar";
-import AppHeader from "@/components/app/admin/header";
+import AppHeader from "@/components/app/header";
 
 export default function Layout({ children, className }) {
   return (
