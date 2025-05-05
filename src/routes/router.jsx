@@ -15,6 +15,7 @@ import ErrorBoundary from "@/components/app/error";
 import RouteTitle from "@/components/app/route-title";
 import RoleRoute from "./permission";
 import { ROLES } from "@/constants/role";
+import { element } from "prop-types";
 
 const POS = lazy(() => import("@/pages/pos"));
 const Dashboard = lazy(() => import("@/pages/dashboard"));
@@ -29,6 +30,7 @@ const Home = lazy(() => import("@/pages/home"));
 const Auth = lazy(() => import("@/pages/auth"));
 const Customer = lazy(() => import("@/pages/customer"));
 const Test = lazy(() => import("@/pages/test"));
+const Test2 = lazy(() => import("@/pages/test2"));
 
 const LazyLoad = (Component) => {
   const WrappedComponent = (props) => (
@@ -59,6 +61,7 @@ const Routes = () => {
   const routesForPublic = [
     { path: "*", element: <NotFound /> },
     { path: "/test", element: LazyLoad(Test)() },
+    {path: '/test2', element: LazyLoad(Test2)()},
     { path: "/offline", element: <OfflinePage /> },
     { path: "/forbidden", element: <ForbiddenPage /> },
   ];
