@@ -37,9 +37,9 @@ export const useFormHandler = (initialValues) => {
   return {
     formData,
     handleChange,
-    handleImageData,
     setFormData,
     resetForm,
+    handleImageData,
     getFormDataForSubmission,
   };
 };

@@ -1,5 +1,6 @@
 import { mapKey } from "@/constants/api";
 import { GoogleMap, Marker, LoadScript } from "@react-google-maps/api";
+import PropTypes from "prop-types";
 import React, { useState, useCallback } from "react";
 
 const containerStyle = {
@@ -7,7 +8,7 @@ const containerStyle = {
   height: "400px",
 };
 
-const MapWithCurrentLocation = () => {
+const MapWithCurrentLocation = ({ onGetLocation }) => {
   const [map, setMap] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [error, setError] = useState(null);
@@ -17,25 +18,34 @@ const MapWithCurrentLocation = () => {
   }, []);
 
   const locate = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setCurrentLocation({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          });
-          map?.panTo({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          });
-        },
-        (error) => {
-          setError(error.message);
-        }
-      );
-    } else {
-      setError("Geolocation is not supported by your browser.");
+    try {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            setCurrentLocation({
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            });
+            map?.panTo({
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            });
+            onGetLocation({
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            });
+          },
+          (error) => {
+            setError(error.message);
+          }
+        );
+      } else {
+        setError("Geolocation is not supported by your browser.");
+      }
+    } catch (err) {
+      console.log('error', err)
     }
+
   };
 
   return (
@@ -90,6 +100,10 @@ const MapWithCurrentLocation = () => {
       </GoogleMap>
     </LoadScript>
   );
+};
+
+MapWithCurrentLocation.propTypes = {
+  onGetLocation: PropTypes.func,
 };
 
 export default MapWithCurrentLocation;
