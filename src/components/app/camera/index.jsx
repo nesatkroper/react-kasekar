@@ -9,14 +9,15 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { Camera, X, Trash2, ImageIcon } from "lucide-react";
+import { Camera, X, Trash2, ImageIcon, Save } from "lucide-react";
 import { showToast } from "@/components/app/toast";
+import PropTypes from "prop-types";
 
 const MAX_IMAGES = 5;
 const WIDTH = 1920;
 const HEIGHT = 1080;
 
-export const CameraCapture = () => {
+export const CameraCapture = ({ onGetImage }) => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const streamRef = useRef(null);
@@ -36,6 +37,10 @@ export const CameraCapture = () => {
       stopCamera();
     }
   }, [isOpen]);
+
+  const handlePassImage = () => {
+    onGetImage(images);
+  };
 
   const startCamera = async () => {
     try {
@@ -112,7 +117,7 @@ export const CameraCapture = () => {
     <div className='space-y-6'>
       <AlertDialog open={isOpen} onOpenChange={handleOpenChange}>
         <AlertDialogTrigger asChild>
-          <Button className='flex items-center gap-2'>
+          <Button variant='outline' className='flex items-center gap-2'>
             <Camera className='h-4 w-4' />
             <span>Open Camera</span>
           </Button>
@@ -187,27 +192,42 @@ export const CameraCapture = () => {
                   className='w-full sm:w-auto'>
                   <X className='h-4 w-4 mr-2' />
                   Stop Camera
-                </Button>{" "}
-                <Button
-                  onClick={captureImage}
-                  disabled={images.length >= MAX_IMAGES}
-                  className='w-full sm:w-auto'>
-                  <ImageIcon className='h-4 w-4 mr-2' />
-                  Capture ({images.length}/{MAX_IMAGES})
                 </Button>
+                {images.length >= 5 ? (
+                  ""
+                ) : (
+                  <Button
+                    onClick={captureImage}
+                    disabled={images.length >= MAX_IMAGES}
+                    className='w-full sm:w-auto'>
+                    <ImageIcon className='h-4 w-4 mr-2' />
+                    Capture ({images.length}/{MAX_IMAGES})
+                  </Button>
+                )}
               </>
             ) : (
               <Button
                 variant='default'
                 onClick={startCamera}
-                className='w-full sm:w-auto'>
+                className='w-full sm:w-auto bg-blue-500'>
                 <Camera className='h-4 w-4 mr-2' />
                 Start Camera
               </Button>
+            )}
+            {images.length >= 5 ? (
+              <Button onClick={() => handlePassImage}>
+                <Save /> Save
+              </Button>
+            ) : (
+              ""
             )}
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
     </div>
   );
+};
+
+CameraCapture.propTypes = {
+  onGetImage: PropTypes.func,
 };

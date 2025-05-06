@@ -7,30 +7,30 @@ import {
   createBrowserRouter,
 } from "react-router-dom";
 
+import RoleRoute from "./permission";
+import { ROLES } from "@/constants/role";
 import NotFound from "@/components/app/404";
 import ForbiddenPage from "@/components/app/403";
 import OfflinePage from "@/components/app/offline";
 import LazyLoading from "@/components/app/loading";
 import ErrorBoundary from "@/components/app/error";
 import RouteTitle from "@/components/app/route-title";
-import RoleRoute from "./permission";
-import { ROLES } from "@/constants/role";
-import { element } from "prop-types";
 
 const POS = lazy(() => import("@/pages/pos"));
-const Dashboard = lazy(() => import("@/pages/dashboard"));
-const Department = lazy(() => import("@/pages/department"));
-const Position = lazy(() => import("@/pages/position"));
-const Employee = lazy(() => import("@/pages/employee"));
-const Product = lazy(() => import("@/pages/product"));
-const Category = lazy(() => import("@/pages/category"));
-const Brand = lazy(() => import("@/pages/brand"));
-const Authentication = lazy(() => import("@/pages/authentication"));
 const Home = lazy(() => import("@/pages/home"));
 const Auth = lazy(() => import("@/pages/auth"));
-const Customer = lazy(() => import("@/pages/customer"));
 const Test = lazy(() => import("@/pages/test"));
+const Brand = lazy(() => import("@/pages/brand"));
 const Test2 = lazy(() => import("@/pages/test2"));
+const Product = lazy(() => import("@/pages/product"));
+const Category = lazy(() => import("@/pages/category"));
+const Customer = lazy(() => import("@/pages/customer"));
+const Position = lazy(() => import("@/pages/position"));
+const Employee = lazy(() => import("@/pages/employee"));
+const Dashboard = lazy(() => import("@/pages/dashboard"));
+const Department = lazy(() => import("@/pages/department"));
+const Authentication = lazy(() => import("@/pages/authentication"));
+const CustomerDetail = lazy(() => import("@/pages/customer/detail"));
 
 const LazyLoad = (Component) => {
   const WrappedComponent = (props) => (
@@ -61,7 +61,7 @@ const Routes = () => {
   const routesForPublic = [
     { path: "*", element: <NotFound /> },
     { path: "/test", element: LazyLoad(Test)() },
-    {path: '/test2', element: LazyLoad(Test2)()},
+    { path: "/test2", element: LazyLoad(Test2)() },
     { path: "/offline", element: <OfflinePage /> },
     { path: "/forbidden", element: <ForbiddenPage /> },
   ];
@@ -93,7 +93,10 @@ const Routes = () => {
         {
           path: "/customer",
           element: <RoleRoute minimumRole={ROLES.MANAGEMENT} />,
-          children: [{ path: "", element: LazyLoad(Customer)() }],
+          children: [
+            { path: "", element: LazyLoad(Customer)() },
+            { path: ":customerId", element: LazyLoad(CustomerDetail)() },
+          ],
         },
         {
           path: "/employee",

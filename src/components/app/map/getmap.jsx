@@ -3,15 +3,19 @@ import { GoogleMap, Marker, LoadScript } from "@react-google-maps/api";
 import PropTypes from "prop-types";
 import React, { useState, useCallback } from "react";
 
-const containerStyle = {
-  width: "100%",
-  height: "400px",
-};
-
-const MapWithCurrentLocation = ({ onGetLocation }) => {
+const MapWithLocation = ({
+  onGetLocation,
+  width = "100%",
+  height = "400px",
+  className = "py-3",
+}) => {
   const [map, setMap] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [error, setError] = useState(null);
+  const containerStyle = {
+    width,
+    height,
+  };
 
   const onMapLoad = useCallback((mapInstance) => {
     setMap(mapInstance);
@@ -43,70 +47,73 @@ const MapWithCurrentLocation = ({ onGetLocation }) => {
         setError("Geolocation is not supported by your browser.");
       }
     } catch (err) {
-      console.log('error', err)
+      console.log("error", err);
     }
-
   };
 
   return (
-    <LoadScript googleMapsApiKey={mapKey}>
-      <GoogleMap
-        mapContainerStyle={containerStyle}
-        center={currentLocation || { lat: 11.5564, lng: 104.9282 }} // Default center: Phnom Penh
-        zoom={currentLocation ? 15 : 10}
-        onLoad={onMapLoad}
-        onClick={(event) => {
-          // Optional: You can still get coordinates on map click
-          console.log(
-            "Map clicked at:",
-            event.latLng.lat(),
-            event.latLng.lng()
-          );
-        }}>
-        {currentLocation && <Marker position={currentLocation} />}
-
-        <button
-          onClick={locate}
-          style={{
-            position: "absolute",
-            top: "10px",
-            right: "10px",
-            padding: "10px",
-            backgroundColor: "white",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-            boxShadow: "0 2px 5px rgba(0, 0, 0, 0.2)",
-            zIndex: 10,
+    <div className={className}>
+      <LoadScript googleMapsApiKey={mapKey}>
+        <GoogleMap
+          mapContainerStyle={containerStyle}
+          center={currentLocation || { lat: 11.5564, lng: 104.9282 }}
+          zoom={currentLocation ? 15 : 10}
+          onLoad={onMapLoad}
+          onClick={(event) => {
+            console.log(
+              "Map clicked at:",
+              event.latLng.lat(),
+              event.latLng.lng()
+            );
           }}>
-          Get Current Location
-        </button>
-        {error && (
-          <div
+          {currentLocation && <Marker position={currentLocation} />}
+
+          <button
+            onClick={locate}
             style={{
               position: "absolute",
-              bottom: "10px",
-              left: "10px",
-              backgroundColor: "white",
-              color: "red",
+              top: "10px",
+              right: "10px",
               padding: "10px",
+              backgroundColor: "white",
+              border: "none",
               borderRadius: "5px",
+              cursor: "pointer",
               boxShadow: "0 2px 5px rgba(0, 0, 0, 0.2)",
               zIndex: 10,
             }}>
-            {error}
-          </div>
-        )}
-      </GoogleMap>
-    </LoadScript>
+            Get Current Location
+          </button>
+          {error && (
+            <div
+              style={{
+                position: "absolute",
+                bottom: "10px",
+                left: "10px",
+                backgroundColor: "white",
+                color: "red",
+                padding: "10px",
+                borderRadius: "5px",
+                boxShadow: "0 2px 5px rgba(0, 0, 0, 0.2)",
+                zIndex: 10,
+              }}>
+              {error}
+            </div>
+          )}
+        </GoogleMap>
+      </LoadScript>
+    </div>
   );
 };
 
-MapWithCurrentLocation.propTypes = {
+MapWithLocation.propTypes = {
   onGetLocation: PropTypes.func,
+  width: PropTypes.string,
+  height: PropTypes.string,
+  className: PropTypes.string,
 };
 
-export default MapWithCurrentLocation;
+export default MapWithLocation;
 
 // import { mapKey } from "@/constants/api";
 // import { GoogleMap, Marker, LoadScript } from "@react-google-maps/api";

@@ -11,21 +11,24 @@ import { FormComboBox, FormInput, FormTextArea } from "@/components/app/form";
 import { getCustomers } from "@/contexts/reducer/customer-slice";
 import { showToast } from "@/components/app/toast";
 import { toast } from "sonner";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-
-
-
+import MapWithLocation from "@/components/app/map/getmap";
+import { CameraCapture } from "@/components/app/camera";
 
 const CustomerAdd = ({ onSuccess }) => {
   const dispatch = useDispatch();
   const { data: empData } = useSelector((state) => state.employees);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { formData: cusData, resetForm: resetCus, handleChange: handleChangeCus } = useFormHandler({
+  const {
+    formData: cusData,
+    resetForm: resetCus,
+    handleChange: handleChangeCus,
+  } = useFormHandler({
     status: "active",
     firstName: "",
     lastName: "",
@@ -34,17 +37,26 @@ const CustomerAdd = ({ onSuccess }) => {
     employeeId: "",
   });
 
-  const { formData: infoData, resetForm: resetInfo, handleChange: handleChangeInfo, handleImageData,
-    getFormDataForSubmission, } = useFormHandler({
-      customerId: "",
-      picture: "",
-      region: "",
-      email: "",
-      address: "",
-      country: "",
-      note: "",
-      status: "",
-    });
+  const {
+    formData: infoData,
+    resetForm: resetInfo,
+    handleChange: handleChangeInfo,
+    handleImageData,
+    getFormDataForSubmission,
+  } = useFormHandler({
+    customerId: "",
+    picture: "",
+    region: "",
+    email: "",
+    address: "",
+    country: "",
+    note: "",
+    status: "",
+  });
+
+  const handleGetImages = (img) => {
+    alert(img);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -85,17 +97,24 @@ const CustomerAdd = ({ onSuccess }) => {
 
   return (
     <DialogContent className='max-w-[500px] p-4'>
-      <Tabs defaultValue="default">
-        <TabsList className="w-[93%] flex items-center justify-between">
-          <TabsTrigger className="w-full" value="default">Default</TabsTrigger>
-          <TabsTrigger className="w-full" value="detail">Detail</TabsTrigger>
-          <TabsTrigger className="w-full" value="address">Address</TabsTrigger>
-          <TabsTrigger className="w-full" value="image">Image</TabsTrigger>
+      <Tabs defaultValue='default'>
+        <TabsList className='w-[93%] flex items-center justify-between'>
+          <TabsTrigger className='w-full' value='default'>
+            Default
+          </TabsTrigger>
+          <TabsTrigger className='w-full' value='detail'>
+            Detail
+          </TabsTrigger>
+          <TabsTrigger className='w-full' value='address'>
+            Address
+          </TabsTrigger>
         </TabsList>
-        <TabsContent value="default">
-          <form onSubmit={handleSubmit} className="py-4">
+        <TabsContent value='default'>
+          <form onSubmit={handleSubmit} className='py-4'>
             <DialogHeader className='mb-3'>
-              <DialogTitle className='text-md text-center'>Customer Details</DialogTitle>
+              <DialogTitle className='text-md text-center'>
+                Customer Details
+              </DialogTitle>
             </DialogHeader>
             <Separator className='my-3' />
             <div className='grid sm:grid-cols-2 gap-3 mb-3'>
@@ -119,7 +138,9 @@ const CustomerAdd = ({ onSuccess }) => {
                 optLabel='lastName'
                 name='employeeId'
                 label='Employee Member'
-                onCallbackSelect={(event) => handleChangeCus("employeeId", event)}
+                onCallbackSelect={(event) =>
+                  handleChangeCus("employeeId", event)
+                }
                 required
               />
               <FormComboBox
@@ -146,14 +167,15 @@ const CustomerAdd = ({ onSuccess }) => {
             </Button>
           </form>
         </TabsContent>
-        <TabsContent value="detail">
-          <form onSubmit={handleSubmit} className="py-4">
+        <TabsContent value='detail'>
+          <form onSubmit={handleSubmit} className='py-4'>
             <DialogHeader className='mb-3'>
-              <DialogTitle className='text-md text-center'>Customer Infomations</DialogTitle>
+              <DialogTitle className='text-md text-center'>
+                Customer Infomations
+              </DialogTitle>
             </DialogHeader>
             <Separator className='my-3' />
             <div className='grid sm:grid-cols-2 gap-3 mb-3'>
-
               <FormInput
                 onCallbackInput={handleChangeInfo}
                 label='Region'
@@ -177,7 +199,9 @@ const CustomerAdd = ({ onSuccess }) => {
                 optLabel='lastName'
                 name='employeeId'
                 label='Employee Member'
-                onCallbackSelect={(event) => handleChangeInfo("employeeId", event)}
+                onCallbackSelect={(event) =>
+                  handleChangeInfo("employeeId", event)
+                }
                 required
               />
 
@@ -206,10 +230,12 @@ const CustomerAdd = ({ onSuccess }) => {
             </Button>
           </form>
         </TabsContent>
-        <TabsContent value="address">
-          <form onSubmit={handleSubmit} className="py-4">
+        <TabsContent value='address'>
+          <form onSubmit={handleSubmit} className='py-4'>
             <DialogHeader className='mb-3'>
-              <DialogTitle className='text-md text-center'>Customer Infomations</DialogTitle>
+              <DialogTitle className='text-md text-center'>
+                Customer Address
+              </DialogTitle>
             </DialogHeader>
             <Separator className='my-3' />
             <div className='grid sm:grid-cols-2 gap-3 mb-3'>
@@ -219,7 +245,9 @@ const CustomerAdd = ({ onSuccess }) => {
                 optLabel='lastName'
                 name='employeeId'
                 label='Employee Member'
-                onCallbackSelect={(event) => handleChangeInfo("employeeId", event)}
+                onCallbackSelect={(event) =>
+                  handleChangeInfo("employeeId", event)
+                }
                 required
               />
               <FormComboBox
@@ -228,22 +256,24 @@ const CustomerAdd = ({ onSuccess }) => {
                 optLabel='lastName'
                 name='employeeId'
                 label='Employee Member'
-                onCallbackSelect={(event) => handleChangeInfo("employeeId", event)}
+                onCallbackSelect={(event) =>
+                  handleChangeInfo("employeeId", event)
+                }
                 required
               />
-
-
             </div>
-            <Button type='submit' disabled={isSubmitting} className='w-full'>
+            <MapWithLocation height='300px' />
+            <CameraCapture onGetImage={handleGetImages} />
+            <Button
+              type='submit'
+              disabled={isSubmitting}
+              className='w-full mt-4'>
               {isSubmitting ? <Loader className='animate-spin' /> : <Check />}
               Submit
             </Button>
           </form>
         </TabsContent>
-        <TabsContent value="image">Change your detail here.</TabsContent>
       </Tabs>
-
-
     </DialogContent>
   );
 };
