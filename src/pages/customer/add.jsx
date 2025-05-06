@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { Check, Loader } from "lucide-react";
 import { GENDER } from "@/utils/default-data";
-import { FormComboBox, FormInput } from "@/components/app/form";
+import { FormComboBox, FormInput, FormTextArea } from "@/components/app/form";
 import { getCustomers } from "@/contexts/reducer/customer-slice";
 import { showToast } from "@/components/app/toast";
 import { toast } from "sonner";
@@ -88,61 +88,159 @@ const CustomerAdd = ({ onSuccess }) => {
       <Tabs defaultValue="default">
         <TabsList className="w-[93%] flex items-center justify-between">
           <TabsTrigger className="w-full" value="default">Default</TabsTrigger>
-          <TabsTrigger className="w-full" value="Detail">Detail</TabsTrigger>
+          <TabsTrigger className="w-full" value="detail">Detail</TabsTrigger>
+          <TabsTrigger className="w-full" value="address">Address</TabsTrigger>
+          <TabsTrigger className="w-full" value="image">Image</TabsTrigger>
         </TabsList>
-        <TabsContent value="default"> <form onSubmit={handleSubmit}>
-          <DialogHeader className='mb-3'>
-            <DialogTitle className='text-md text-center'>Customer Details</DialogTitle>
-          </DialogHeader>
-          <Separator className='my-3' />
-          <div className='grid sm:grid-cols-2 gap-3 mb-3'>
-            <FormInput
-              onCallbackInput={handleChangeCus}
-              label='First Name*'
-              name='firstName'
-              placeholder='John, ...'
-              required
-            />
-            <FormInput
-              onCallbackInput={handleChangeCus}
-              label='Last Name*'
-              name='lastName'
-              placeholder='Doe, ...'
-              required
-            />
-            <FormComboBox
-              item={empData}
-              optID='employeeId'
-              optLabel='lastName'
-              name='employeeId'
-              label='Employee Member'
-              onCallbackSelect={(event) => handleChangeCus("employeeId", event)}
-              required
-            />
-            <FormComboBox
-              item={GENDER}
-              optID='value'
-              optLabel='label'
-              name='gender'
-              label='Gender'
-              onCallbackSelect={(event) => handleChangeCus("gender", event)}
-              required
-            />
-            <FormInput
-              onCallbackInput={handleChangeCus}
-              label='Phone Number'
-              name='phone'
-              type='number'
-              placeholder='010280202'
-              required
-            />
-          </div>
-          <Button type='submit' disabled={isSubmitting} className='w-full'>
-            {isSubmitting ? <Loader className='animate-spin' /> : <Check />}
-            Submit
-          </Button>
-        </form></TabsContent>
-        <TabsContent value="detail">Change your detail here.</TabsContent>
+        <TabsContent value="default">
+          <form onSubmit={handleSubmit} className="py-4">
+            <DialogHeader className='mb-3'>
+              <DialogTitle className='text-md text-center'>Customer Details</DialogTitle>
+            </DialogHeader>
+            <Separator className='my-3' />
+            <div className='grid sm:grid-cols-2 gap-3 mb-3'>
+              <FormInput
+                onCallbackInput={handleChangeCus}
+                label='First Name'
+                name='firstName'
+                placeholder='John, ...'
+                required
+              />
+              <FormInput
+                onCallbackInput={handleChangeCus}
+                label='Last Name'
+                name='lastName'
+                placeholder='Doe, ...'
+                required
+              />
+              <FormComboBox
+                item={empData}
+                optID='employeeId'
+                optLabel='lastName'
+                name='employeeId'
+                label='Employee Member'
+                onCallbackSelect={(event) => handleChangeCus("employeeId", event)}
+                required
+              />
+              <FormComboBox
+                item={GENDER}
+                optID='value'
+                optLabel='label'
+                name='gender'
+                label='Gender'
+                onCallbackSelect={(event) => handleChangeCus("gender", event)}
+                required
+              />
+              <FormInput
+                onCallbackInput={handleChangeCus}
+                label='Phone Number'
+                name='phone'
+                type='number'
+                placeholder='010280202'
+                required
+              />
+            </div>
+            <Button type='submit' disabled={isSubmitting} className='w-full'>
+              {isSubmitting ? <Loader className='animate-spin' /> : <Check />}
+              Submit
+            </Button>
+          </form>
+        </TabsContent>
+        <TabsContent value="detail">
+          <form onSubmit={handleSubmit} className="py-4">
+            <DialogHeader className='mb-3'>
+              <DialogTitle className='text-md text-center'>Customer Infomations</DialogTitle>
+            </DialogHeader>
+            <Separator className='my-3' />
+            <div className='grid sm:grid-cols-2 gap-3 mb-3'>
+
+              <FormInput
+                onCallbackInput={handleChangeInfo}
+                label='Region'
+                name='region'
+                placeholder='khmer'
+                required
+              />
+
+              <FormInput
+                onCallbackInput={handleChangeInfo}
+                label='Email Address'
+                name='email'
+                placeholder='someone@something.com'
+              />
+
+              <FormTextArea />
+
+              <FormComboBox
+                item={empData}
+                optID='employeeId'
+                optLabel='lastName'
+                name='employeeId'
+                label='Employee Member'
+                onCallbackSelect={(event) => handleChangeInfo("employeeId", event)}
+                required
+              />
+
+              <FormComboBox
+                item={GENDER}
+                optID='value'
+                optLabel='label'
+                name='gender'
+                label='Gender'
+                onCallbackSelect={(event) => handleChangeInfo("gender", event)}
+                required
+              />
+
+              <FormInput
+                onCallbackInput={handleChangeInfo}
+                label='Phone Number'
+                name='phone'
+                type='number'
+                placeholder='010280202'
+                required
+              />
+            </div>
+            <Button type='submit' disabled={isSubmitting} className='w-full'>
+              {isSubmitting ? <Loader className='animate-spin' /> : <Check />}
+              Submit
+            </Button>
+          </form>
+        </TabsContent>
+        <TabsContent value="address">
+          <form onSubmit={handleSubmit} className="py-4">
+            <DialogHeader className='mb-3'>
+              <DialogTitle className='text-md text-center'>Customer Infomations</DialogTitle>
+            </DialogHeader>
+            <Separator className='my-3' />
+            <div className='grid sm:grid-cols-2 gap-3 mb-3'>
+              <FormComboBox
+                item={empData}
+                optID='employeeId'
+                optLabel='lastName'
+                name='employeeId'
+                label='Employee Member'
+                onCallbackSelect={(event) => handleChangeInfo("employeeId", event)}
+                required
+              />
+              <FormComboBox
+                item={empData}
+                optID='employeeId'
+                optLabel='lastName'
+                name='employeeId'
+                label='Employee Member'
+                onCallbackSelect={(event) => handleChangeInfo("employeeId", event)}
+                required
+              />
+
+
+            </div>
+            <Button type='submit' disabled={isSubmitting} className='w-full'>
+              {isSubmitting ? <Loader className='animate-spin' /> : <Check />}
+              Submit
+            </Button>
+          </form>
+        </TabsContent>
+        <TabsContent value="image">Change your detail here.</TabsContent>
       </Tabs>
 
 
