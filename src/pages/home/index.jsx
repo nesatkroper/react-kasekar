@@ -119,6 +119,7 @@ const Home = () => {
                     "https://github.com/nesatkroper/img/blob/main/phanunlogo.png?raw=true"
                   }
                   alt={`${empData[0]?.firstName} ${empData[0]?.lastName}`}
+                  loading='lazy'
                 />
                 <AvatarFallback className='text-3xl bg-green-700'>
                   {getInitials(empData[0]?.firstName, empData[0]?.lastName)}
