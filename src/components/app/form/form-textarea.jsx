@@ -49,8 +49,8 @@ const FormTextArea = ({
 };
 
 FormTextArea.propTypes = {
-  onCallbackInput: PropTypes.func.isRequired,
-  name: PropTypes.string.isRequired,
+  onCallbackInput: PropTypes.func,
+  name: PropTypes.string,
   value: PropTypes.string,
   mainClass: PropTypes.string,
   inputClass: PropTypes.string,

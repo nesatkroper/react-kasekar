@@ -110,6 +110,7 @@ const PositionEdit = ({ items = {}, onSuccess }) => {
             onCallbackInput={handleChange}
             label='Decription'
             name='memo'
+            value={formData?.memo}
             placeholder='N/A'
           />
         </div>

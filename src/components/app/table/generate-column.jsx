@@ -78,6 +78,9 @@ export const generateColumns = (
       // if (field.key === "capacity")
       //   return <div>{toUnit(value, 0, t("table.room.peo"))}</div>;
 
+      if (field.key === "memo" || field.key === "description")
+        return <div className='max-h-24 overflow-y-auto'>{value}</div>;
+
       if (field.key === "email")
         return <div className='font-semibold'>{value}</div>;
 

@@ -10,6 +10,7 @@ export const setAuthData = (userData) => {
       {
         authId: userData.authId,
         email: userData.email,
+        employeeId: userData?.employeeId,
         role: userData.role,
         status: userData.status,
       },

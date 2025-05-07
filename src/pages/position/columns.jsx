@@ -17,6 +17,7 @@ export const PositionColumns = () => {
       { key: "positionName", label: t("table.pos.name") },
       { key: "positionCode", label: t("table.pos.code") },
       { key: "department.departmentName", label: t("table.dep.name") },
+      { key: "memo", label: t("table.status") },
       { key: "status", label: t("table.status") },
     ],
     (item, onSuccess) => (

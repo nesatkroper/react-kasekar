@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import axiosInstance from "@/lib/axios-instance";
+import MapWithLocation from "@/components/app/map/getmap";
+import axiosAuth from "@/lib/axios-auth";
 import { useFormHandler } from "@/hooks/use-form-handler";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
@@ -11,14 +12,14 @@ import { FormComboBox, FormInput, FormTextArea } from "@/components/app/form";
 import { getCustomers } from "@/contexts/reducer/customer-slice";
 import { showToast } from "@/components/app/toast";
 import { toast } from "sonner";
+import { CameraCapture } from "@/components/app/camera";
+import { getEmployees } from "@/contexts/reducer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import MapWithLocation from "@/components/app/map/getmap";
-import { CameraCapture } from "@/components/app/camera";
 
 const CustomerAdd = ({ onSuccess }) => {
   const dispatch = useDispatch();
@@ -58,6 +59,10 @@ const CustomerAdd = ({ onSuccess }) => {
     alert(img);
   };
 
+  useEffect(() => {
+    dispatch(getEmployees());
+  }, [dispatch]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -66,7 +71,8 @@ const CustomerAdd = ({ onSuccess }) => {
     });
 
     try {
-      const response = await axiosInstance.post("/customer", cusData);
+      console.table(cusData);
+      const response = await axiosAuth.post("/customer", cusData);
 
       setTimeout(() => {
         toast.dismiss(toastId);
@@ -110,7 +116,7 @@ const CustomerAdd = ({ onSuccess }) => {
           </TabsTrigger>
         </TabsList>
         <TabsContent value='default'>
-          <form onSubmit={handleSubmit} className='py-4'>
+          <form onSubmit={handleSubmit} className='py-2'>
             <DialogHeader className='mb-3'>
               <DialogTitle className='text-md text-center'>
                 Customer Details
