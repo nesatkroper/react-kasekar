@@ -1,213 +1,53 @@
-import React, { useRef, useState, useEffect } from "react";
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogFooter,
-  AlertDialogCancel,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import axios from "axios";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Camera, X, Trash2, ImageIcon } from "lucide-react";
+import { Download } from "lucide-react";
+import { apiKey } from "@/constants/api";
 import { showToast } from "@/components/app/toast";
 
-const MAX_IMAGES = 5;
-const WIDTH = 1920;
-const HEIGHT = 1080;
+export default function LogExportButton() {
+  const [isExporting, setIsExporting] = useState(false);
 
-const CameraCapture = () => {
-  const videoRef = useRef(null);
-  const canvasRef = useRef(null);
-  const streamRef = useRef(null);
-  const [images, setImages] = useState([]);
-  const [isOpen, setIsOpen] = useState(false);
-  const [cameraActive, setCameraActive] = useState(false);
-  const [cameraError, setCameraError] = useState(null);
+  const handleExport = async () => {
+    setIsExporting(true);
 
-  useEffect(() => {
-    return () => {
-      stopCamera();
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!isOpen) {
-      stopCamera();
-    }
-  }, [isOpen]);
-
-  const startCamera = async () => {
     try {
-      setCameraError(null);
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "environment", width: WIDTH, height: HEIGHT },
+      const response = await axios.get(`${apiKey}/log/exp`, {
+        responseType: "blob",
       });
 
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        streamRef.current = stream;
-        await videoRef.current.play();
-        setCameraActive(true);
-        showToast("Camera started", "success", false, {
-          duration: 5000,
-        });
-      }
+      // Create a download link and trigger it
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute(
+        "download",
+        `logs_export_${new Date().toISOString().split("T")[0]}.xlsx`
+      );
+      document.body.appendChild(link);
+      link.click();
+
+      // Clean up
+      link.parentNode?.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      showToast("Export successful", "success", false);
     } catch (error) {
-      console.error("Error accessing camera:", error);
-      setCameraError(error.message || "Could not access camera");
-      showToast("Camera Error", "error");
-    }
-  };
-
-  const stopCamera = () => {
-    if (streamRef.current) {
-      const tracks = streamRef.current.getTracks();
-      tracks.forEach((track) => track.stop());
-      streamRef.current = null;
-
-      if (videoRef.current) {
-        videoRef.current.srcObject = null;
-      }
-
-      setCameraActive(false);
-    }
-  };
-
-  const captureImage = () => {
-    if (images.length >= MAX_IMAGES) {
-      showToast("Maximum images reached", "warning");
-      return;
-    }
-
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
-    ctx.drawImage(videoRef.current, 0, 0, WIDTH, HEIGHT);
-
-    const imageData = canvas.toDataURL("image/webp", 0.9);
-    setImages((prev) => [...prev, imageData]);
-
-    showToast("Image captured", "success", false, {
-      duration: 5000,
-    });
-  };
-
-  const deleteImage = (index) => {
-    setImages((prev) => prev.filter((_, idx) => idx !== index));
-    showToast("Image deleted", "success", false, {
-      duration: 5000,
-    });
-  };
-
-  const handleOpenChange = (open) => {
-    setIsOpen(open);
-    if (open) {
-      startCamera();
-    } else {
-      stopCamera();
+      console.error("Export failed:", error);
+      showToast("Export failed", "error");
+    } finally {
+      setIsExporting(false);
     }
   };
 
   return (
-    <div className='space-y-6'>
-      <AlertDialog open={isOpen} onOpenChange={handleOpenChange}>
-        <AlertDialogTrigger asChild>
-          <Button className='flex items-center gap-2'>
-            <Camera className='h-4 w-4' />
-            <span>Open Camera</span>
-          </Button>
-        </AlertDialogTrigger>
-        <AlertDialogContent className='sm:max-w-md'>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Camera Capture</AlertDialogTitle>
-            {cameraError ? (
-              <div className='bg-red-50 p-4 rounded-md text-red-600'>
-                <p className='font-medium'>Camera Error</p>
-                <p className='text-sm'>{cameraError}</p>
-                <Button
-                  variant='outline'
-                  className='mt-2'
-                  onClick={startCamera}>
-                  Try Again
-                </Button>
-              </div>
-            ) : (
-              <div className='relative bg-black rounded-md overflow-hidden'>
-                <video
-                  ref={videoRef}
-                  className='w-full h-auto'
-                  autoPlay
-                  playsInline
-                />
-                <canvas
-                  ref={canvasRef}
-                  width={WIDTH}
-                  height={HEIGHT}
-                  className='hidden'
-                />
-              </div>
-            )}
-          </AlertDialogHeader>
-          <AlertDialogFooter className='flex-col sm:flex-row gap-2'>
-            {cameraActive ? (
-              <>
-                <Button
-                  variant='secondary'
-                  onClick={captureImage}
-                  disabled={images.length >= MAX_IMAGES}
-                  className='w-full sm:w-auto'>
-                  <ImageIcon className='h-4 w-4 mr-2' />
-                  Capture ({images.length}/{MAX_IMAGES})
-                </Button>
-                <Button
-                  variant='destructive'
-                  onClick={stopCamera}
-                  className='w-full sm:w-auto'>
-                  <X className='h-4 w-4 mr-2' />
-                  Stop Camera
-                </Button>
-              </>
-            ) : (
-              <Button
-                variant='default'
-                onClick={startCamera}
-                className='w-full sm:w-auto'>
-                <Camera className='h-4 w-4 mr-2' />
-                Start Camera
-              </Button>
-            )}
-            <AlertDialogCancel>Close</AlertDialogCancel>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
-      {images.length > 0 && (
-        <div className='space-y-4'>
-          <h3 className='text-lg font-medium'>
-            Captured Images ({images.length}/{MAX_IMAGES})
-          </h3>
-          <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4'>
-            {images.map((img, idx) => (
-              <div key={idx} className='relative group'>
-                <img
-                  src={img || "/placeholder.svg"}
-                  className='w-full h-auto aspect-video object-cover rounded-md border border-gray-200'
-                  alt={`Captured ${idx + 1}`}
-                />
-                <Button
-                  variant='destructive'
-                  size='icon'
-                  className='absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity'
-                  onClick={() => deleteImage(idx)}>
-                  <Trash2 className='h-4 w-4' />
-                </Button>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
+    <Button
+      onClick={handleExport}
+      disabled={isExporting}
+      className='gap-2'
+      variant='default'>
+      <Download className='h-4 w-4' />
+      {isExporting ? "Exporting..." : "Export Logs to Excel"}
+    </Button>
   );
-};
-
-export default CameraCapture;
+}

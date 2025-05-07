@@ -213,7 +213,7 @@ const Home = () => {
               <TabsTrigger value='overview'>Overview</TabsTrigger>
               <TabsTrigger value='details'>Details</TabsTrigger>
               <TabsTrigger value='attendance'>Attendance</TabsTrigger>
-              <TabsTrigger value='agent'>Agent</TabsTrigger>
+              <TabsTrigger value='agent'>Customer</TabsTrigger>
             </TabsList>
 
             <div className='flex items-center gap-2'>
