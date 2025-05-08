@@ -22,6 +22,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import AccountInfo from "@/pages/account";
+import { clearAuthData } from "@/providers/user-provider";
 
 export const image =
   "https://cdn.i-scmp.com/sites/default/files/styles/1020x680/public/d8/images/canvas/2025/02/14/399a4243-c5ea-41f9-bdb0-47ca4a00132c_a775a7ba.jpg?itok=oTQYtIbb&v=1739524311";
@@ -32,6 +33,7 @@ export function NavUser({ user }) {
 
   const handleLogout = async () => {
     try {
+      clearAuthData();
       Cookies.remove("token");
       Cookies.remove("auth-info");
       navigate("/auth");

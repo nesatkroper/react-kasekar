@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   ChevronDown,
   Filter,
+  ListCollapse,
   MapPin,
   MoreHorizontal,
   Plus,
@@ -30,6 +31,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Link } from "react-router-dom";
 
 const customers = [
   {
@@ -349,8 +351,17 @@ export default function CustomerTabs() {
                                     <DropdownMenuLabel>
                                       Actions
                                     </DropdownMenuLabel>
+
                                     <DropdownMenuItem>
-                                      View details
+                                      <Link
+                                        to={`/customer/${customer.customerId}`}
+                                        className='flex'>
+                                        <ListCollapse
+                                          size={16}
+                                          className='me-2'
+                                        />
+                                        View details
+                                      </Link>
                                     </DropdownMenuItem>
                                     <DropdownMenuItem>
                                       Edit customer

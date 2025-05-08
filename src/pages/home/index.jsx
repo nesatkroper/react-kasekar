@@ -43,7 +43,7 @@ const Home = () => {
   useEffect(() => {
     dispatch(
       getEmployees({
-        id: user.employeeId,
+        id: user?.employeeId,
         params: { position: true, department: true },
       })
     );

@@ -8,6 +8,7 @@ import React, {
   useMemo,
   useState,
 } from "react";
+import { clearAuthData } from "./user-provider";
 
 const AuthContext = createContext();
 
@@ -60,6 +61,7 @@ const AuthProvider = ({ children }) => {
       checkTokenExpiration(token);
     } else {
       delete axios.defaults.headers.common["Authorization"];
+      clearAuthData();
       Cookies.remove("token");
       Cookies.remove("auth_id");
       Cookies.remove("role");
@@ -73,6 +75,7 @@ const AuthProvider = ({ children }) => {
         if (error.response?.status === 401) {
           console.warn("Token expired, logging out...");
           setToken(null);
+          clearAuthData();
           window.location.reload(true);
         }
         return Promise.reject(error);

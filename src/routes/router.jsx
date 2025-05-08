@@ -76,10 +76,14 @@ const Routes = () => {
         </>
       ),
       children: [
-        { path: "/auth", element: <Navigate to='/' /> },
         { path: "/", element: LazyLoad(Home)() },
+        { path: "/auth", element: <Navigate to='/' /> },
         { path: "/home", element: LazyLoad(Home)() },
-        { path: "/dashboard", element: LazyLoad(Dashboard)() },
+        {
+          path: "/dashboard",
+          element: <RoleRoute minimumRole={ROLES.MANAGEMENT} />,
+          children: [{ path: "", element: LazyLoad(Dashboard)() }],
+        },
         {
           path: "/department",
           element: <RoleRoute minimumRole={ROLES.MANAGEMENT} />,
@@ -93,11 +97,9 @@ const Routes = () => {
         {
           path: "/customer",
           element: <RoleRoute minimumRole={ROLES.MANAGEMENT} />,
-          children: [
-            { path: "", element: LazyLoad(Customer)() },
-            { path: ":customerId", element: LazyLoad(CustomerDetail)() },
-          ],
+          children: [{ path: "", element: LazyLoad(Customer)() }],
         },
+        { path: "customer/:customerId", element: LazyLoad(CustomerDetail)() },
         {
           path: "/employee",
           element: <RoleRoute minimumRole={ROLES.MANAGEMENT} />,
