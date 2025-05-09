@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from "react";
 import Cookies from "js-cookie";
 import axiosAuth from "@/lib/axios-auth";
-import Invoice from "@/components/app/invoice";
+import Invoice from "@/components/app/invoice/old";
 import RequestKHQR from "@/components/app/khqr/request-khqr";
 import PropTypes from "prop-types";
 import { afterPerDollar, cDollar, toUnit } from "@/utils/dec-format";
