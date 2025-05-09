@@ -39,6 +39,7 @@
     "pos": "Position",
     "auth": "Authorization",
     "setting": "Settings",
+    "inventory": "Inventory",
     "gen": "General",
     "lang": "Language",
     "team": "Team",
@@ -171,7 +172,6 @@
   },
   "po": {
     "alert": "Open Shift to continue working...",
-
     "shift": {
       "open": "Open Shift",
       "select": "Select Bank Note.",

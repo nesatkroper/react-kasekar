@@ -20,6 +20,7 @@ const POS = lazy(() => import("@/pages/pos"));
 const Home = lazy(() => import("@/pages/home"));
 const Auth = lazy(() => import("@/pages/auth"));
 const Test = lazy(() => import("@/pages/test"));
+const Sale = lazy(() => import("@/pages/sale"));
 const Brand = lazy(() => import("@/pages/brand"));
 const Test2 = lazy(() => import("@/pages/test2"));
 const Product = lazy(() => import("@/pages/product"));
@@ -27,11 +28,11 @@ const Category = lazy(() => import("@/pages/category"));
 const Customer = lazy(() => import("@/pages/customer"));
 const Position = lazy(() => import("@/pages/position"));
 const Employee = lazy(() => import("@/pages/employee"));
+const Inventory = lazy(() => import("@/pages/inventory"));
 const Dashboard = lazy(() => import("@/pages/dashboard"));
 const Department = lazy(() => import("@/pages/department"));
 const Authentication = lazy(() => import("@/pages/authentication"));
 const CustomerDetail = lazy(() => import("@/pages/cus-detail/detail"));
-const Sale = lazy(() => import("@/pages/sale"));
 
 const LazyLoad = (Component) => {
   const WrappedComponent = (props) => (
@@ -84,6 +85,11 @@ const Routes = () => {
           path: "/dashboard",
           element: <RoleRoute minimumRole={ROLES.MANAGEMENT} />,
           children: [{ path: "", element: LazyLoad(Dashboard)() }],
+        },
+        {
+          path: "/inventory",
+          element: <RoleRoute minimumRole={ROLES.MANAGEMENT} />,
+          children: [{ path: "", element: LazyLoad(Inventory)() }],
         },
         {
           path: "/department",

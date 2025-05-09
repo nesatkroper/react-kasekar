@@ -24,3 +24,38 @@ export const useRoles = () => {
     ROLES,
   };
 };
+
+
+// "use client"
+
+// import { useAuth } from "@/providers/auth-provider"
+// import { ROLE_HIERARCHY, ROLES } from "@/constants/role"
+
+// export const useRoles = () => {
+//   const { user } = useAuth()
+
+//   // Get the user's role from the auth context
+//   const userRole = user?.role || ROLES.CLIENT // Default to lowest role if not set
+
+//   // Check if user has a specific role
+//   const hasRole = (role: string) => {
+//     return userRole === role
+//   }
+
+//   // Check if user has the exact role or a higher role in the hierarchy
+//   const hasHigherOrEqualRole = (minimumRole: string) => {
+//     // If the role doesn't exist in the hierarchy, deny access
+//     if (!ROLE_HIERARCHY[userRole] || !ROLE_HIERARCHY[minimumRole]) {
+//       return false
+//     }
+
+//     // Compare the user's role level with the minimum required role level
+//     return ROLE_HIERARCHY[userRole] >= ROLE_HIERARCHY[minimumRole]
+//   }
+
+//   return {
+//     userRole,
+//     hasRole,
+//     hasHigherOrEqualRole,
+//   }
+// }
