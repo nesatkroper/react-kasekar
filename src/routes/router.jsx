@@ -21,6 +21,7 @@ const Home = lazy(() => import("@/pages/home"));
 const Auth = lazy(() => import("@/pages/auth"));
 const Test = lazy(() => import("@/pages/test"));
 const Sale = lazy(() => import("@/pages/sale"));
+const Cart = lazy(() => import("@/pages/cart"));
 const Brand = lazy(() => import("@/pages/brand"));
 const Test2 = lazy(() => import("@/pages/test2"));
 const Product = lazy(() => import("@/pages/product"));
@@ -107,6 +108,7 @@ const Routes = () => {
           children: [{ path: "", element: LazyLoad(Customer)() }],
         },
         { path: "customer/:customerId", element: LazyLoad(CustomerDetail)() },
+        { path: "cart", element: LazyLoad(Cart)() },
         {
           path: "/employee",
           element: <RoleRoute minimumRole={ROLES.MANAGEMENT} />,

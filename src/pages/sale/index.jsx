@@ -38,9 +38,12 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { apiUrl } from "@/constants/api";
+import { getAuthData } from "@/providers/user-provider";
 
 const Sale = () => {
   const dispatch = useDispatch();
+  const user = getAuthData();
+  console.log(user);
   const { data: products, loading: proLoading } = useSelector(
     (state) => state?.products || {}
   );
