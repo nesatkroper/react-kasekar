@@ -1,6 +1,4 @@
-
-
-import { useState } from "react"
+import React, { useState } from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -8,10 +6,16 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table"
-import { ArrowUpDown, MoreHorizontal, ChevronDown, Eye, Edit } from "lucide-react"
+} from "@tanstack/react-table";
+import {
+  ArrowUpDown,
+  MoreHorizontal,
+  ChevronDown,
+  Eye,
+  Edit,
+} from "lucide-react";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,11 +24,25 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
   DropdownMenuCheckboxItem,
-} from "@/components/ui/dropdown-menu"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+} from "@/components/ui/dropdown-menu";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import PropTypes from "prop-types";
 
 // Dummy data based on the schema
 const products = [
@@ -188,9 +206,7 @@ const products = [
     currentStock: 68,
     desc: "Handcrafted ceramic coffee mug",
   },
-]
-
-
+];
 
 const columns = [
   {
@@ -198,15 +214,19 @@ const columns = [
     header: "Product",
     cell: ({ row }) => (
       <div>
-        <div className="font-medium">{row.getValue("productName")}</div>
-        <div className="text-xs text-muted-foreground">{row.original.productCode}</div>
+        <div className='font-medium'>{row.getValue("productName")}</div>
+        <div className='text-xs text-muted-foreground'>
+          {row.original.productCode}
+        </div>
       </div>
     ),
   },
   {
     accessorKey: "categoryName",
     header: "Category",
-    cell: ({ row }) => <Badge variant="outline">{row.getValue("categoryName")}</Badge>,
+    cell: ({ row }) => (
+      <Badge variant='outline'>{row.getValue("categoryName")}</Badge>
+    ),
   },
   {
     accessorKey: "unit",
@@ -214,7 +234,12 @@ const columns = [
     cell: ({ row }) => (
       <div>
         {row.getValue("unit")}
-        {row.original.capacity && <span className="text-muted-foreground"> ({row.original.capacity})</span>}
+        {row.original.capacity && (
+          <span className='text-muted-foreground'>
+            {" "}
+            ({row.original.capacity})
+          </span>
+        )}
       </div>
     ),
   },
@@ -222,119 +247,139 @@ const columns = [
     accessorKey: "sellPrice",
     header: ({ column }) => {
       return (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
           Price
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown className='ml-2 h-4 w-4' />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => {
-      const price = Number.parseFloat(row.getValue("sellPrice"))
+      const price = Number.parseFloat(row.getValue("sellPrice"));
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
-      }).format(price)
+      }).format(price);
 
-      const discountRate = row.original.discountRate
+      const discountRate = row.original.discountRate;
 
       return (
         <div>
-          <div className="font-medium">{formatted}</div>
-          {discountRate > 0 && <div className="text-xs text-green-600">-{discountRate}% off</div>}
+          <div className='font-medium'>{formatted}</div>
+          {discountRate > 0 && (
+            <div className='text-xs text-green-600'>-{discountRate}% off</div>
+          )}
         </div>
-      )
+      );
     },
   },
   {
     accessorKey: "currentStock",
     header: ({ column }) => {
       return (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
           Stock
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown className='ml-2 h-4 w-4' />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => {
-      const stock = Number.parseInt(row.getValue("currentStock"))
+      const stock = Number.parseInt(row.getValue("currentStock"));
       return (
-        <div className="flex items-center gap-2">
+        <div className='flex items-center gap-2'>
           <div
-            className={`h-2 w-2 rounded-full ${stock < 20 ? "bg-red-500" : stock < 50 ? "bg-yellow-500" : "bg-green-500"}`}
-          ></div>
-          <div className={`font-medium ${stock < 20 ? "text-red-500" : ""}`}>{stock}</div>
+            className={`h-2 w-2 rounded-full ${
+              stock < 20
+                ? "bg-red-500"
+                : stock < 50
+                ? "bg-yellow-500"
+                : "bg-green-500"
+            }`}></div>
+          <div className={`font-medium ${stock < 20 ? "text-red-500" : ""}`}>
+            {stock}
+          </div>
         </div>
-      )
+      );
     },
   },
   {
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {
-      const status = row.getValue("status") 
+      const status = row.getValue("status");
       return (
-        <Badge variant={status === "active" ? "default" : "secondary"} className="capitalize">
+        <Badge
+          variant={status === "active" ? "default" : "secondary"}
+          className='capitalize'>
           {status}
         </Badge>
-      )
+      );
     },
   },
   {
     id: "actions",
     cell: ({ row }) => {
-      const product = row.original
+      const product = row.original;
 
       return (
-        <div className="flex items-center justify-end gap-2">
-          <Button variant="ghost" size="icon" className="h-8 w-8">
-            <Eye className="h-4 w-4" />
+        <div className='flex items-center justify-end gap-2'>
+          <Button variant='ghost' size='icon' className='h-8 w-8'>
+            <Eye className='h-4 w-4' />
           </Button>
-          <Button variant="ghost" size="icon" className="h-8 w-8">
-            <Edit className="h-4 w-4" />
+          <Button variant='ghost' size='icon' className='h-8 w-8'>
+            <Edit className='h-4 w-4' />
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-8 w-8">
-                <MoreHorizontal className="h-4 w-4" />
+              <Button variant='ghost' size='icon' className='h-8 w-8'>
+                <MoreHorizontal className='h-4 w-4' />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-[160px]">
+            <DropdownMenuContent align='end' className='w-[160px]'>
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(product.productId)}>
+              <DropdownMenuItem
+                onClick={() =>
+                  navigator.clipboard.writeText(product.productId)
+                }>
                 Copy product ID
               </DropdownMenuItem>
               <DropdownMenuItem>View details</DropdownMenuItem>
               <DropdownMenuItem>Edit product</DropdownMenuItem>
               <DropdownMenuItem>View stock history</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-red-600">Delete product</DropdownMenuItem>
+              <DropdownMenuItem className='text-red-600'>
+                Delete product
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-      )
+      );
     },
   },
-]
-
+];
 
 export function ProductsTable({ searchQuery = "" }) {
-  const [sorting, setSorting] = useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = useState({})
-  const [categoryFilter, setCategoryFilter] = useState<string>("all")
+  const [sorting, setSorting] = useState([]);
+  const [columnFilters, setColumnFilters] = useState([]);
+  const [columnVisibility, setColumnVisibility] = useState({});
+  const [rowSelection, setRowSelection] = useState({});
+  const [categoryFilter, setCategoryFilter] = useState("all");
 
   const filteredProducts = products.filter((product) => {
     const matchesSearch =
       product.productName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       product.productCode?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.desc?.toLowerCase().includes(searchQuery.toLowerCase())
+      product.desc?.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const matchesCategory = categoryFilter === "all" || product.categoryName === categoryFilter
+    const matchesCategory =
+      categoryFilter === "all" || product.categoryName === categoryFilter;
 
-    return matchesSearch && matchesCategory
-  })
+    return matchesSearch && matchesCategory;
+  });
 
   const table = useReactTable({
     data: filteredProducts,
@@ -353,24 +398,26 @@ export function ProductsTable({ searchQuery = "" }) {
       columnVisibility,
       rowSelection,
     },
-  })
+  });
 
   // Get unique categories for filter
-  const categories = ["all", ...new Set(products.map((p) => p.categoryName))]
+  const categories = ["all", ...new Set(products.map((p) => p.categoryName))];
 
   return (
-    <div className="w-full">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+    <div className='w-full'>
+      <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6'>
+        <div className='flex flex-col sm:flex-row gap-4 w-full sm:w-auto'>
           <Input
-            placeholder="Filter products..."
-            value={(table.getColumn("productName")?.getFilterValue() ) ?? ""}
-            onChange={(event) => table.getColumn("productName")?.setFilterValue(event.target.value)}
-            className="max-w-sm"
+            placeholder='Filter products...'
+            value={table.getColumn("productName")?.getFilterValue() ?? ""}
+            onChange={(event) =>
+              table.getColumn("productName")?.setFilterValue(event.target.value)
+            }
+            className='max-w-sm'
           />
           <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Category" />
+            <SelectTrigger className='w-[180px]'>
+              <SelectValue placeholder='Category' />
             </SelectTrigger>
             <SelectContent>
               {categories.map((category) => (
@@ -381,14 +428,14 @@ export function ProductsTable({ searchQuery = "" }) {
             </SelectContent>
           </Select>
         </div>
-        <div className="flex items-center gap-2 ml-auto">
+        <div className='flex items-center gap-2 ml-auto'>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto">
-                Columns <ChevronDown className="ml-2 h-4 w-4" />
+              <Button variant='outline' className='ml-auto'>
+                Columns <ChevronDown className='ml-2 h-4 w-4' />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align='end'>
               {table
                 .getAllColumns()
                 .filter((column) => column.getCanHide())
@@ -396,21 +443,22 @@ export function ProductsTable({ searchQuery = "" }) {
                   return (
                     <DropdownMenuCheckboxItem
                       key={column.id}
-                      className="capitalize"
+                      className='capitalize'
                       checked={column.getIsVisible()}
-                      onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                    >
+                      onCheckedChange={(value) =>
+                        column.toggleVisibility(!!value)
+                      }>
                       {column.id}
                     </DropdownMenuCheckboxItem>
-                  )
+                  );
                 })}
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button variant="outline">Export</Button>
+          <Button variant='outline'>Export</Button>
           <Button>Add Product</Button>
         </div>
       </div>
-      <div className="rounded-md border">
+      <div className='rounded-md border'>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -418,9 +466,14 @@ export function ProductsTable({ searchQuery = "" }) {
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead key={header.id}>
-                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                     </TableHead>
-                  )
+                  );
                 })}
               </TableRow>
             ))}
@@ -428,15 +481,24 @@ export function ProductsTable({ searchQuery = "" }) {
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell
+                  colSpan={columns.length}
+                  className='h-24 text-center'>
                   No products found.
                 </TableCell>
               </TableRow>
@@ -444,27 +506,35 @@ export function ProductsTable({ searchQuery = "" }) {
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-between space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
+      <div className='flex items-center justify-between space-x-2 py-4'>
+        <div className='flex-1 text-sm text-muted-foreground'>
           {table.getFilteredRowModel().rows.length} product(s) found.
         </div>
-        <div className="flex items-center space-x-2">
+        <div className='flex items-center space-x-2'>
           <Button
-            variant="outline"
-            size="sm"
+            variant='outline'
+            size='sm'
             onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
+            disabled={!table.getCanPreviousPage()}>
             Previous
           </Button>
-          <div className="text-sm font-medium">
-            Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+          <div className='text-sm font-medium'>
+            Page {table.getState().pagination.pageIndex + 1} of{" "}
+            {table.getPageCount()}
           </div>
-          <Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
+          <Button
+            variant='outline'
+            size='sm'
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}>
             Next
           </Button>
         </div>
       </div>
     </div>
-  )
+  );
 }
+
+ProductsTable.propTypes = {
+  searchQuery: PropTypes.string,
+};

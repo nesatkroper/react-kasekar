@@ -40,6 +40,7 @@
     "auth": "Authorization",
     "setting": "Settings",
     "inventory": "Inventory",
+    "sale": "Sale",
     "gen": "General",
     "lang": "Language",
     "team": "Team",

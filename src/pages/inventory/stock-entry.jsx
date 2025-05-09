@@ -1,21 +1,23 @@
-
-
-import { useState } from "react"
+import React, { useState } from "react";
 import {
-
   flexRender,
   getCoreRowModel,
   useReactTable,
   getPaginationRowModel,
   getSortedRowModel,
-
   getFilteredRowModel,
+} from "@tanstack/react-table";
+import { ArrowUpDown, Calendar, MoreHorizontal } from "lucide-react";
 
-} from "@tanstack/react-table"
-import { ArrowUpDown, Calendar, MoreHorizontal } from "lucide-react"
-
-import { Button } from "@/components/ui/button"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,9 +25,10 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import PropTypes from "prop-types";
 
 // Dummy data based on the schema
 const stockEntries = [
@@ -149,23 +152,25 @@ const stockEntries = [
     supplierName: "Green Living Products",
     invNumber: "INV-2023-05-008",
   },
-]
-
-
+];
 
 const columns = [
   {
     accessorKey: "invNumber",
     header: "Invoice #",
-    cell: ({ row }) => <div className="font-medium">{row.getValue("invNumber")}</div>,
+    cell: ({ row }) => (
+      <div className='font-medium'>{row.getValue("invNumber")}</div>
+    ),
   },
   {
     accessorKey: "productName",
     header: "Product",
     cell: ({ row }) => (
       <div>
-        <div className="font-medium">{row.getValue("productName")}</div>
-        <div className="text-xs text-muted-foreground">{row.original.productCode}</div>
+        <div className='font-medium'>{row.getValue("productName")}</div>
+        <div className='text-xs text-muted-foreground'>
+          {row.original.productCode}
+        </div>
       </div>
     ),
   },
@@ -173,45 +178,51 @@ const columns = [
     accessorKey: "quantity",
     header: ({ column }) => {
       return (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
           Quantity
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown className='ml-2 h-4 w-4' />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => {
-      return <div className="font-medium text-center">{row.getValue("quantity")}</div>
+      return (
+        <div className='font-medium text-center'>
+          {row.getValue("quantity")}
+        </div>
+      );
     },
   },
   {
     accessorKey: "entryPrice",
     header: "Total Price",
     cell: ({ row }) => {
-      const price = Number.parseFloat(row.getValue("entryPrice"))
+      const price = Number.parseFloat(row.getValue("entryPrice"));
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
-      }).format(price)
-      return <div className="font-medium">{formatted}</div>
+      }).format(price);
+      return <div className='font-medium'>{formatted}</div>;
     },
   },
   {
     accessorKey: "unitPrice",
     header: "Unit Price",
     cell: ({ row }) => {
-      const price = Number.parseFloat(row.getValue("unitPrice"))
+      const price = Number.parseFloat(row.getValue("unitPrice"));
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
-      }).format(price)
-      return <div>{formatted}</div>
+      }).format(price);
+      return <div>{formatted}</div>;
     },
   },
   {
     accessorKey: "supplierName",
     header: "Supplier",
     cell: ({ row }) => (
-      <Badge variant="outline" className="font-normal">
+      <Badge variant='outline' className='font-normal'>
         {row.getValue("supplierName")}
       </Badge>
     ),
@@ -220,42 +231,45 @@ const columns = [
     accessorKey: "entryDate",
     header: "Date",
     cell: ({ row }) => {
-      const date = new Date(row.getValue("entryDate"))
+      const date = new Date(row.getValue("entryDate"));
       return (
-        <div className="flex items-center">
-          <Calendar className="mr-2 h-4 w-4 text-muted-foreground" />
+        <div className='flex items-center'>
+          <Calendar className='mr-2 h-4 w-4 text-muted-foreground' />
           {date.toLocaleDateString()}
         </div>
-      )
+      );
     },
   },
   {
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {
-      const status = row.getValue("status") 
+      const status = row.getValue("status");
       return (
-        <Badge variant={status === "active" ? "default" : "secondary"} className="capitalize">
+        <Badge
+          variant={status === "active" ? "default" : "secondary"}
+          className='capitalize'>
           {status}
         </Badge>
-      )
+      );
     },
   },
   {
     id: "actions",
     cell: ({ row }) => {
-      const entry = row.original
+      const entry = row.original;
 
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <MoreHorizontal className="h-4 w-4" />
+            <Button variant='ghost' size='icon' className='h-8 w-8'>
+              <MoreHorizontal className='h-4 w-4' />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-[160px]">
+          <DropdownMenuContent align='end' className='w-[160px]'>
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(entry.entryId)}>
+            <DropdownMenuItem
+              onClick={() => navigator.clipboard.writeText(entry.entryId)}>
               Copy entry ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
@@ -264,24 +278,22 @@ const columns = [
             <DropdownMenuItem>Void entry</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      )
+      );
     },
   },
-]
-
-
+];
 
 export function StockEntries({ searchQuery = "" }) {
-  const [sorting, setSorting] = useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [sorting, setSorting] = useState([]);
+  const [columnFilters, setColumnFilters] = useState([]);
 
   const filteredEntries = stockEntries.filter(
     (entry) =>
       entry.productName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       entry.productCode.toLowerCase().includes(searchQuery.toLowerCase()) ||
       entry.invNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      entry.supplierName.toLowerCase().includes(searchQuery.toLowerCase()),
-  )
+      entry.supplierName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const table = useReactTable({
     data: filteredEntries,
@@ -296,23 +308,25 @@ export function StockEntries({ searchQuery = "" }) {
       sorting,
       columnFilters,
     },
-  })
+  });
 
   return (
-    <div className="w-full">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+    <div className='w-full'>
+      <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6'>
         <Input
-          placeholder="Search invoices, products, suppliers..."
-          value={(table.getColumn("invNumber")?.getFilterValue()) ?? ""}
-          onChange={(event) => table.getColumn("invNumber")?.setFilterValue(event.target.value)}
-          className="max-w-sm"
+          placeholder='Search invoices, products, suppliers...'
+          value={table.getColumn("invNumber")?.getFilterValue() ?? ""}
+          onChange={(event) =>
+            table.getColumn("invNumber")?.setFilterValue(event.target.value)
+          }
+          className='max-w-sm'
         />
-        <div className="flex items-center gap-2 ml-auto">
-          <Button variant="outline">Export</Button>
+        <div className='flex items-center gap-2 ml-auto'>
+          <Button variant='outline'>Export</Button>
           <Button>Add Stock Entry</Button>
         </div>
       </div>
-      <div className="rounded-md border">
+      <div className='rounded-md border'>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -320,9 +334,14 @@ export function StockEntries({ searchQuery = "" }) {
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead key={header.id}>
-                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                     </TableHead>
-                  )
+                  );
                 })}
               </TableRow>
             ))}
@@ -330,15 +349,24 @@ export function StockEntries({ searchQuery = "" }) {
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell
+                  colSpan={columns.length}
+                  className='h-24 text-center'>
                   No stock entries found.
                 </TableCell>
               </TableRow>
@@ -346,27 +374,35 @@ export function StockEntries({ searchQuery = "" }) {
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-between space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
+      <div className='flex items-center justify-between space-x-2 py-4'>
+        <div className='flex-1 text-sm text-muted-foreground'>
           {table.getFilteredRowModel().rows.length} entries found.
         </div>
-        <div className="flex items-center space-x-2">
+        <div className='flex items-center space-x-2'>
           <Button
-            variant="outline"
-            size="sm"
+            variant='outline'
+            size='sm'
             onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
+            disabled={!table.getCanPreviousPage()}>
             Previous
           </Button>
-          <div className="text-sm font-medium">
-            Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+          <div className='text-sm font-medium'>
+            Page {table.getState().pagination.pageIndex + 1} of{" "}
+            {table.getPageCount()}
           </div>
-          <Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
+          <Button
+            variant='outline'
+            size='sm'
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}>
             Next
           </Button>
         </div>
       </div>
     </div>
-  )
+  );
 }
+
+StockEntries.propTypes = {
+  searchQuery: PropTypes.string,
+};

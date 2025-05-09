@@ -7,7 +7,8 @@ import {
   SquareTerminal,
   ClipboardPen,
   HomeIcon,
-  ChartCandlestick
+  ChartCandlestick,
+  ChartColumnIncreasing,
 } from "lucide-react";
 
 export const data = {
@@ -122,6 +123,11 @@ export const data = {
       name: "po",
       url: "pos",
       icon: ClipboardPen,
+    },
+    {
+      name: "sale",
+      url: "sale",
+      icon: ChartColumnIncreasing,
     },
   ],
 };
