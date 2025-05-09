@@ -21,6 +21,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { ModeToggle } from "../theme/mode-toggle";
 import { showToast } from "../toast";
+import { ThemeSwitcher } from "../theme/theme-switcher";
 
 const SOCKET = io(apiUrl);
 
@@ -179,6 +180,7 @@ const AppHeader = () => {
           <UserNav />
         ) : (
           <div className='flex gap-3'>
+            <ThemeSwitcher />
             <ModeToggle />
             <LanguageToggle />
           </div>

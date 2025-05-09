@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from "react";
 import en_flag from "@/assets/images/en.png";
 import kh_flag from "@/assets/images/kh.png";
+import { Languages } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Languages } from "lucide-react";
-import { useTranslation } from "react-i18next";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const LanguageToggle = () => {
   const [t, i18n] = useTranslation("admin");
@@ -26,9 +32,19 @@ const LanguageToggle = () => {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
-        <Languages size={16} />
-      </DropdownMenuTrigger>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger>
+            <DropdownMenuTrigger disabled>
+              <Languages size={16} />
+            </DropdownMenuTrigger>
+          </TooltipTrigger>
+          <TooltipContent className='bg-red-500'>
+            <p className='text-base'>This Feature Temporary Disabled.</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+
       <DropdownMenuContent>
         <DropdownMenuItem onClick={() => hangleChangeLanguage("en")}>
           <img
