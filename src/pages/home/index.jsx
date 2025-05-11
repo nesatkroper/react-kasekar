@@ -3,10 +3,11 @@ import Layout from "@/layout";
 import Details from "./detail";
 import OverView from "./overview";
 import Attendance from "./attendance";
+import CustomerTabs from "./agent";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { getEmployees } from "@/contexts/reducer";
+import { getClientCus, getEmployees } from "@/contexts/reducer";
 import { Progress } from "@/components/ui/progress";
 import { useDispatch, useSelector } from "react-redux";
 import { getAuthData } from "@/providers/user-provider";
@@ -26,11 +27,11 @@ import {
   MapPin,
   Bookmark,
 } from "lucide-react";
-import CustomerTabs from "./agent";
 
 const Home = () => {
   const dispatch = useDispatch();
   const { data: empData } = useSelector((state) => state.employees);
+  const { data: clientCus } = useSelector((state) => state.clientCus);
   const [activeTab, setActiveTab] = useState("overview");
   const [performanceValue, setPerformanceValue] = useState(0);
 
@@ -41,6 +42,7 @@ const Home = () => {
   };
 
   useEffect(() => {
+    dispatch(getClientCus({ id: user?.employeeId }));
     dispatch(
       getEmployees({
         id: user?.employeeId,
@@ -48,7 +50,7 @@ const Home = () => {
       })
     );
   }, [dispatch]);
-  console.log(empData);
+  console.log(clientCus);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -255,7 +257,7 @@ const Home = () => {
           </TabsContent>
 
           <TabsContent value='agent' className='space-y-6'>
-            <CustomerTabs />
+            <CustomerTabs customers={clientCus} />
           </TabsContent>
         </Tabs>
       </div>

@@ -107,8 +107,7 @@ const Routes = () => {
           element: <RoleRoute minimumRole={ROLES.MANAGEMENT} />,
           children: [{ path: "", element: LazyLoad(Customer)() }],
         },
-        { path: "customer/:customerId", element: LazyLoad(CustomerDetail)() },
-        { path: "cart", element: LazyLoad(Cart)() },
+
         {
           path: "/employee",
           element: <RoleRoute minimumRole={ROLES.MANAGEMENT} />,
@@ -118,11 +117,6 @@ const Routes = () => {
           path: "/pos",
           element: <RoleRoute minimumRole={ROLES.MANAGEMENT} />,
           children: [{ path: "", element: LazyLoad(POS)() }],
-        },
-        {
-          path: "/sale",
-          element: <RoleRoute minimumRole={ROLES.MANAGEMENT} />,
-          children: [{ path: "", element: LazyLoad(Sale)() }],
         },
         {
           path: "/product",
@@ -144,6 +138,9 @@ const Routes = () => {
           element: <RoleRoute minimumRole={ROLES.MANAGEMENT} />,
           children: [{ path: "", element: LazyLoad(Authentication)() }],
         },
+        { path: "customer/:customerId", element: LazyLoad(CustomerDetail)() },
+        { path: "cart", element: LazyLoad(Cart)() },
+        { path: "/sale", element: LazyLoad(Sale)() },
         { path: "*", element: <NotFound /> },
       ],
     },

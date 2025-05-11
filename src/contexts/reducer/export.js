@@ -16,6 +16,7 @@ import stateReduce from "./state-slice";
 import cityReduce from "./city-slice";
 import groupMessageReduce from "./group-message-slice";
 import roleReduce from "./role-slice";
+import clientCustomerReduce from "./client-cus-slice.jsx";
 
 export default {
   user: userReduce,
@@ -36,4 +37,5 @@ export default {
   counters: counterReduce,
   groupmessage: groupMessageReduce,
   roles: roleReduce,
+  clientCus: clientCustomerReduce,
 };

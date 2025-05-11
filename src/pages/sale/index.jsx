@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import Layout from "@/layout";
 import { Link } from "react-router-dom";
+import { apiUrl } from "@/constants/api";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getProducts } from "@/contexts/reducer";
 import { Separator } from "@/components/ui/separator";
 import { useDispatch, useSelector } from "react-redux";
+// import { getAuthData } from "@/providers/user-provider";
 import { Plus, Eye, Search, ShoppingCart, Filter, Star } from "lucide-react";
 import {
   Card,
@@ -37,13 +39,12 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { apiUrl } from "@/constants/api";
-import { getAuthData } from "@/providers/user-provider";
+import Banner from "./banner";
 
 const Sale = () => {
   const dispatch = useDispatch();
-  const user = getAuthData();
-  console.log(user);
+  // const user = getAuthData();
+
   const { data: products, loading: proLoading } = useSelector(
     (state) => state?.products || {}
   );
@@ -55,8 +56,10 @@ const Sale = () => {
   const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
-    dispatch(getProducts({ params: { category: true } }));
+    dispatch(getProducts({ params: { category: true, stocks: true } }));
   }, [dispatch]);
+
+  console.log(products[0].stocks[0].qunatity);
 
   const categories = [
     { value: "all", label: "All Categories" },
@@ -84,7 +87,7 @@ const Sale = () => {
       if (sortOption === "price-high") return b.sellPrice - a.sellPrice;
       if (sortOption === "newest")
         return new Date(b.createdAt) - new Date(a.createdAt);
-      return 0; // featured
+      return 0;
     });
 
   const cartItemCount = 3;
@@ -105,19 +108,7 @@ const Sale = () => {
   return (
     <Layout>
       <div className='mx-auto'>
-        <div className='relative rounded-xl overflow-hidden bg-gradient-to-r from-slate-900 to-slate-700 mb-4'>
-          <div className="absolute inset-0 opacity-20 bg-[url('/placeholder.svg')] bg-center bg-cover"></div>
-          <div className='relative z-10 px-6 py-8 md:py-10 md:px-12 text-white'>
-            <h1 className='text-lg md:text-2xl font-bold mb-4'>
-              Shop Our Premium Fertilizer
-            </h1>
-            <p className=' md:text-lg max-w-2xl '>
-              Discover quality products at competitive prices with our
-              satisfaction guarantee.
-            </p>
-          </div>
-        </div>
-
+        <Banner />
         <header className='flex flex-col md:flex-row items-center justify-between mb-4 gap-2'>
           <div className='flex items-center gap-2'>
             {filteredProducts && (
@@ -227,15 +218,13 @@ const Sale = () => {
                 </Select>
               </div>
 
-              <Link to='/cart'>
-                <Button variant='outline' size='icon' className='relative'>
-                  <ShoppingCart className='h-5 w-5' />
-                  {cartItemCount > 0 && (
-                    <span className='absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center'>
-                      {cartItemCount}
-                    </span>
-                  )}
-                </Button>
+              <Link to='/cart' size='icon' className='relative'>
+                <ShoppingCart className='h-5 w-5' />
+                {cartItemCount > 0 && (
+                  <span className='absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center'>
+                    {cartItemCount}
+                  </span>
+                )}
               </Link>
             </div>
           </div>
@@ -336,7 +325,7 @@ const Sale = () => {
                   </CardContent>
                   <CardFooter className='p-5 pt-0'>
                     <Button
-                      className='w-full bg-slate-900 hover:bg-slate-800 text-white'
+                      className='w-full'
                       disabled={
                         product.status !== "active" || !product.stocks?.length
                       }>
@@ -465,7 +454,7 @@ const Sale = () => {
             </div>
             <DialogFooter>
               <Button
-                className='w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-white'
+                className='w-full sm:w-auto'
                 disabled={
                   selectedProduct?.status !== "active" ||
                   !selectedProduct?.stocks?.length

@@ -11,6 +11,7 @@ import { getStates } from "./state-slice";
 import { getGroupMessages } from "./group-message-slice";
 import { getMe } from "./me-slice";
 import { getRoles } from "./role-slice";
+import { getClientCus } from "./client-cus-slice";
 
 export {
   getCarts,
@@ -26,4 +27,5 @@ export {
   getGroupMessages,
   getMe,
   getRoles,
+  getClientCus,
 };
