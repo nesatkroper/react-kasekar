@@ -33,7 +33,7 @@ const Inventory = lazy(() => import("@/pages/inventory"));
 const Dashboard = lazy(() => import("@/pages/dashboard"));
 const Department = lazy(() => import("@/pages/department"));
 const Authentication = lazy(() => import("@/pages/authentication"));
-const CustomerDetail = lazy(() => import("@/pages/cus-detail/detail"));
+const CustomerDetail = lazy(() => import("@/pages/cus-detail"));
 
 const LazyLoad = (Component) => {
   const WrappedComponent = (props) => (

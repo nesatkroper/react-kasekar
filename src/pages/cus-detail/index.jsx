@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import AddressMap from "./map";
 import ImageGallery from "./image-gallery";
@@ -10,6 +10,9 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getCustomers } from "@/contexts/reducer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   MapPin,
@@ -35,105 +38,32 @@ import {
 } from "@/components/ui/card";
 
 const CustomerDetail = () => {
-  const customer = {
-    customerId: 1,
-    firstName: "John",
-    lastName: "Doe",
-    gender: "male",
-    phone: "+1 (555) 123-4547",
-    status: "active",
-    createdAt: new Date("2023-01-15"),
-    updatedAt: new Date("2023-05-20"),
-    info: {
-      picture: "/placeholder.svg?height=150&width=150",
-      region: "North",
-      email: "john.doe@example.com",
-      note: "VIP customer, prefers communication via email",
-      govId: "ID12345478",
-      govPicture: "/placeholder.svg?height=300&width=400",
-      govExpire: new Date("2025-10-15"),
-      status: "active",
-    },
-    address: [
-      {
-        addressId: "addr-uuid-1",
-        cityId: 1,
-        stateId: 1,
-        latitude: 40.7128,
-        longitude: -74.004,
-        status: "active",
-        createdAt: new Date("2023-01-15"),
-        updatedAt: new Date("2023-01-15"),
-        city: { cityId: 1, name: "New York City" },
-        state: { stateId: 1, name: "New York" },
-        image: [
-          {
-            imageId: "img-uuid-1",
-            imageUrl: "/placeholder.svg?height=400&width=400",
-            imageType: "exterior",
-            addressId: "addr-uuid-1",
-            status: "active",
-            createdAt: new Date("2023-01-15"),
-            updatedAt: new Date("2023-01-15"),
-          },
-          {
-            imageId: "img-uuid-2",
-            imageUrl: "/placeholder.svg?height=400&width=400",
-            imageType: "interior",
-            addressId: "addr-uuid-1",
-            status: "active",
-            createdAt: new Date("2023-01-15"),
-            updatedAt: new Date("2023-01-15"),
-          },
-          {
-            imageId: "img-uuid-3",
-            imageUrl: "/placeholder.svg?height=400&width=400",
-            imageType: "document",
-            addressId: "addr-uuid-1",
-            status: "active",
-            createdAt: new Date("2023-01-15"),
-            updatedAt: new Date("2023-01-15"),
-          },
-        ],
-      },
-      {
-        addressId: "addr-uuid-2",
-        cityId: 2,
-        stateId: 1,
-        latitude: 40.4782,
-        longitude: -73.9442,
-        status: "active",
-        createdAt: new Date("2023-02-20"),
-        updatedAt: new Date("2023-02-20"),
-        city: { cityId: 2, name: "Brooklyn" },
-        state: { stateId: 1, name: "New York" },
-        image: [
-          {
-            imageId: "img-uuid-4",
-            imageUrl: "/placeholder.svg?height=400&width=400",
-            imageType: "exterior",
-            addressId: "addr-uuid-2",
-            status: "active",
-            createdAt: new Date("2023-02-20"),
-            updatedAt: new Date("2023-02-20"),
-          },
-        ],
-      },
-    ],
-  };
+  const params = useParams();
+  const dispatch = useDispatch();
+  const { data: customer } = useSelector((state) => state.customers);
+
+  useEffect(() => {
+    dispatch(
+      getCustomers({
+        id: params.customerId,
+        params: { info: true, address: true },
+      })
+    );
+  }, [dispatch]);
+  console.log(customer);
 
   const [selectedAddress, setSelectedAddress] = useState(
-    customer.address[0]?.addressId || ""
+    customer[0]?.address[0]?.addressId || ""
   );
 
-  const currentAddress =
-    customer.address.find((addr) => addr.addressId === selectedAddress) ||
-    customer.address[0];
+  const currentAddress = selectedAddress
+    ? customer[0]?.address.find((addr) => addr.addressId === selectedAddress)
+    : customer[0]?.address;
 
-  const fullName = `${customer.firstName} ${customer.lastName}`;
+  const fullName = `${customer[0]?.firstName} ${customer[0]?.lastName}`;
 
   const getStatusVariant = (status) => {
-    switch (status.toLowerCase()) {
+    switch (status?.toLowerCase()) {
       case "active":
         return "success";
       case "inactive":
@@ -147,19 +77,18 @@ const CustomerDetail = () => {
 
   return (
     <Layout>
-      {" "}
       <div className='container mx-auto space-y-4 max-w-7xl'>
         <div className='bg-white dark:bg-slate-950 rounded-lg border shadow-sm p-4'>
           <div className='flex flex-col md:flex-row justify-between items-start md:items-center gap-4'>
             <div className='flex items-center gap-5'>
               <Avatar className='h-20 w-20 border-2 border-primary/10'>
                 <AvatarImage
-                  src={customer.info?.picture || ""}
+                  src={customer[0]?.info?.picture || ""}
                   alt={fullName}
                 />
                 <AvatarFallback className='text-lg bg-primary/10 text-primary'>
-                  {customer.firstName.charAt(0)}
-                  {customer.lastName.charAt(0)}
+                  {customer[0]?.firstName.charAt(0)}
+                  {customer[0]?.lastName.charAt(0)}
                 </AvatarFallback>
               </Avatar>
               <div>
@@ -168,28 +97,28 @@ const CustomerDetail = () => {
                     {fullName}
                   </h1>
                   <Badge
-                    variant={getStatusVariant(customer.status)}
+                    variant={getStatusVariant(customer[0]?.status)}
                     className='ml-2'>
-                    {customer.status}
+                    {customer[0]?.status}
                   </Badge>
                 </div>
                 <div className='flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 mt-1 text-muted-foreground'>
-                  {customer.info?.email && (
+                  {customer[0]?.info?.email && (
                     <div className='flex items-center gap-1.5 text-sm'>
                       <Mail className='h-3.5 w-3.5' />
-                      <span>{customer.info.email}</span>
+                      <span>{customer[0]?.info.email}</span>
                     </div>
                   )}
-                  {customer.phone && (
+                  {customer[0]?.phone && (
                     <div className='flex items-center gap-1.5 text-sm'>
                       <Phone className='h-3.5 w-3.5' />
-                      <span>{customer.phone}</span>
+                      <span>{customer[0]?.phone}</span>
                     </div>
                   )}
-                  {customer.info?.region && (
+                  {customer[0]?.info?.region && (
                     <div className='flex items-center gap-1.5 text-sm'>
                       <Building className='h-3.5 w-3.5' />
-                      <span>{customer.info.region} Region</span>
+                      <span>{customer[0]?.info.region} Region</span>
                     </div>
                   )}
                 </div>
@@ -252,39 +181,39 @@ const CustomerDetail = () => {
                         <p className='text-sm font-medium text-muted-foreground'>
                           Gender
                         </p>
-                        <p className='capitalize'>{customer.gender}</p>
+                        <p className='capitalize'>{customer[0]?.gender}</p>
                       </div>
                       <div className='space-y-1'>
                         <p className='text-sm font-medium text-muted-foreground'>
                           Email Address
                         </p>
-                        <p>{customer.info?.email || "—"}</p>
+                        <p>{customer[0]?.info?.email || "—"}</p>
                       </div>
                       <div className='space-y-1'>
                         <p className='text-sm font-medium text-muted-foreground'>
                           Phone Number
                         </p>
-                        <p>{customer.phone || "—"}</p>
+                        <p>{customer[0]?.phone || "—"}</p>
                       </div>
                       <div className='space-y-1'>
                         <p className='text-sm font-medium text-muted-foreground'>
                           Region
                         </p>
-                        <p>{customer.info?.region || "—"}</p>
+                        <p>{customer[0]?.info?.region || "—"}</p>
                       </div>
                       <div className='space-y-1'>
                         <p className='text-sm font-medium text-muted-foreground'>
                           Status
                         </p>
-                        <Badge variant={getStatusVariant(customer.status)}>
-                          {customer.status}
+                        <Badge variant={getStatusVariant(customer[0]?.status)}>
+                          {customer[0]?.status}
                         </Badge>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
 
-                {customer.info?.note && (
+                {customer[0]?.info?.note && (
                   <Card>
                     <CardHeader className='bg-muted/30 pb-3'>
                       <CardTitle className='text-md flex items-center'>
@@ -294,13 +223,13 @@ const CustomerDetail = () => {
                     </CardHeader>
                     <CardContent>
                       <p className='text-sm leading-relaxed'>
-                        {customer.info.note}
+                        {customer[0]?.info.note}
                       </p>
                     </CardContent>
                   </Card>
                 )}
 
-                {customer.info?.govId && (
+                {customer[0]?.info?.govId && (
                   <Card>
                     <CardHeader className='bg-muted/30 pb-3'>
                       <CardTitle className='text-md flex items-center'>
@@ -310,14 +239,14 @@ const CustomerDetail = () => {
                     </CardHeader>
                     <CardContent>
                       <div className='flex flex-col md:flex-row gap-4'>
-                        {customer.info.govPicture && (
+                        {customer[0]?.info.govPicture && (
                           <div className='md:w-1/3'>
                             <Dialog>
                               <DialogTrigger asChild>
                                 <div className='relative h-48 w-full cursor-pointer overflow-hidden rounded-md border bg-muted/30'>
-                                  <image
+                                  <img
                                     src={
-                                      customer.info.govPicture ||
+                                      customer[0]?.info.govPicture ||
                                       "/placeholder.svg"
                                     }
                                     alt='Government ID'
@@ -334,7 +263,7 @@ const CustomerDetail = () => {
                                 <div className='relative h-[70vh] w-full'>
                                   <image
                                     src={
-                                      customer.info.govPicture ||
+                                      customer[0]?.info.govPicture ||
                                       "/placeholder.svg"
                                     }
                                     alt='Government ID'
@@ -350,9 +279,11 @@ const CustomerDetail = () => {
                             <p className='text-sm font-medium text-muted-foreground'>
                               ID Number
                             </p>
-                            <p className='font-mono'>{customer.info.govId}</p>
+                            <p className='font-mono'>
+                              {customer[0]?.info.govId}
+                            </p>
                           </div>
-                          {customer.info.govExpire && (
+                          {customer[0]?.info.govExpire && (
                             <div className='space-y-1'>
                               <p className='text-sm font-medium text-muted-foreground'>
                                 Expiration Date
@@ -360,19 +291,21 @@ const CustomerDetail = () => {
                               <div className='flex items-center gap-2'>
                                 <p>
                                   {format(
-                                    customer.info.govExpire,
+                                    customer[0]?.info.govExpire,
                                     "MMMM d, yyyy"
                                   )}
                                 </p>
-                                {new Date() > customer.info.govExpire && (
+                                {new Date() > customer[0]?.info.govExpire && (
                                   <Badge
                                     variant='destructive'
                                     className='text-xs'>
                                     Expired
                                   </Badge>
                                 )}
-                                {new Date() < customer.info.govExpire &&
-                                  new Date(customer.info.govExpire).getTime() -
+                                {new Date() < customer[0]?.info.govExpire &&
+                                  new Date(
+                                    customer[0]?.info.govExpire
+                                  ).getTime() -
                                     new Date().getTime() <
                                     1000 * 40 * 40 * 24 * 90 && (
                                     <Badge
@@ -415,7 +348,9 @@ const CustomerDetail = () => {
                       <p className='text-sm font-medium text-muted-foreground'>
                         Customer ID
                       </p>
-                      <p className='font-mono text-sm'>{customer.customerId}</p>
+                      <p className='font-mono text-sm'>
+                        {customer[0]?.customerId}
+                      </p>
                     </div>
                     <Separator />
                     <div className='space-y-1'>
@@ -424,10 +359,10 @@ const CustomerDetail = () => {
                       </p>
                       <div className='flex items-center'>
                         <Calendar className='mr-2 h-4 w-4 text-muted-foreground' />
-                        <p>{format(customer.createdAt, "MMMM d, yyyy")}</p>
+                        {/* <p>{format(customer[0]?.createdAt, "MMMM d, yyyy")}</p> */}
                       </div>
                       <p className='text-xs text-muted-foreground'>
-                        {format(customer.createdAt, "h:mm a")}
+                        {/* {format(customer[0]?.createdAt, "h:mm a")} */}
                       </p>
                     </div>
                     <Separator />
@@ -437,10 +372,10 @@ const CustomerDetail = () => {
                       </p>
                       <div className='flex items-center'>
                         <Calendar className='mr-2 h-4 w-4 text-muted-foreground' />
-                        <p>{format(customer.updatedAt, "MMMM d, yyyy")}</p>
+                        {/* <p>{format(customer[0]?.updatedAt, "MMMM d, yyyy")}</p> */}
                       </div>
                       <p className='text-xs text-muted-foreground'>
-                        {format(customer.updatedAt, "h:mm a")}
+                        {/* {format(customer[0]?.updatedAt, "h:mm a")} */}
                       </p>
                     </div>
                   </CardContent>
@@ -456,7 +391,7 @@ const CustomerDetail = () => {
                   <CardContent>
                     <ScrollArea className='h-[220px] pr-4'>
                       <div className='space-y-4'>
-                        {customer.address.map((addr) => (
+                        {customer[0]?.address.map((addr) => (
                           <div
                             key={addr.addressId}
                             className={`p-3 rounded-md cursor-pointer transition-colors ${
@@ -498,7 +433,7 @@ const CustomerDetail = () => {
                             </div>
                             <div className='flex items-center justify-between mt-2'>
                               <span className='text-xs text-muted-foreground'>
-                                {format(addr.createdAt, "MMM d, yyyy")}
+                                {/* {format(addr.createdAt, "MMM d, yyyy")} */}
                               </span>
                               <div className='flex items-center text-xs text-primary'>
                                 <span>View details</span>
@@ -537,7 +472,7 @@ const CustomerDetail = () => {
               </CardHeader>
               <CardContent className='pt-4'>
                 <div className='flex flex-wrap gap-2 mb-4'>
-                  {customer.address.map((addr) => (
+                  {customer[0]?.address.map((addr) => (
                     <Button
                       key={addr.addressId}
                       variant={
@@ -603,12 +538,12 @@ const CustomerDetail = () => {
                               </p>
                               <div className='flex items-start gap-2'>
                                 <Calendar className='h-4 w-4 text-muted-foreground mt-0.5' />
-                                <span>
+                                {/* <span>
                                   {format(
-                                    currentAddress.createdAt,
+                                    currentAddress?.createdAt,
                                     "MMMM d, yyyy"
                                   )}
-                                </span>
+                                </span> */}
                               </div>
                             </div>
 
@@ -648,7 +583,7 @@ const CustomerDetail = () => {
                         {currentAddress.latitude && currentAddress.longitude ? (
                           <div className='h-[400px] w-full rounded-md border overflow-hidden shadow-sm'>
                             <AddressMap
-                              addresses={customer.address.filter(
+                              addresses={customer[0]?.address.filter(
                                 (addr) => addr.latitude && addr.longitude
                               )}
                               selectedAddressId={selectedAddress}
@@ -676,7 +611,7 @@ const CustomerDetail = () => {
                       </div>
                     </div>
 
-                    {currentAddress.image.length > 0 && (
+                    {currentAddress?.image?.length > 0 && (
                       <div>
                         <div className='flex items-center justify-between mb-4'>
                           <h3 className='text-md font-medium'>
@@ -736,39 +671,47 @@ const CustomerDetail = () => {
 
                   <TabsContent value='all'>
                     <ImageGallery
-                      images={customer.address.flatMap((addr) => addr.image)}
+                      images={customer[0]?.address.flatMap(
+                        (addr) => addr.image
+                      )}
                       showAddressInfo
-                      addresses={customer.address}
+                      addresses={customer[0]?.address}
                     />
                   </TabsContent>
 
                   <TabsContent value='exterior'>
                     <ImageGallery
-                      images={customer.address.flatMap((addr) =>
-                        addr.image.filter((img) => img.imageType === "exterior")
+                      images={customer[0]?.address.flatMap((addr) =>
+                        addr.image?.filter(
+                          (img) => img.imageType === "exterior"
+                        )
                       )}
                       showAddressInfo
-                      addresses={customer.address}
+                      addresses={customer[0]?.address}
                     />
                   </TabsContent>
 
                   <TabsContent value='interior'>
                     <ImageGallery
-                      images={customer.address.flatMap((addr) =>
-                        addr.image.filter((img) => img.imageType === "interior")
+                      images={customer[0]?.address.flatMap((addr) =>
+                        addr.image?.filter(
+                          (img) => img.imageType === "interior"
+                        )
                       )}
                       showAddressInfo
-                      addresses={customer.address}
+                      addresses={customer[0]?.address}
                     />
                   </TabsContent>
 
                   <TabsContent value='document'>
                     <ImageGallery
-                      images={customer.address.flatMap((addr) =>
-                        addr.image.filter((img) => img.imageType === "document")
+                      images={customer[0]?.address.flatMap((addr) =>
+                        addr.image?.filter(
+                          (img) => img.imageType === "document"
+                        )
                       )}
                       showAddressInfo
-                      addresses={customer.address}
+                      addresses={customer[0]?.address}
                     />
                   </TabsContent>
                 </Tabs>
