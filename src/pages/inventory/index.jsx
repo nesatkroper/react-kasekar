@@ -1,44 +1,35 @@
-import React, { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent } from "@/components/ui/card";
+import React, { useEffect, useState } from "react";
+import Layout from "@/layout";
+import { Button } from "@/components/ui/button";
 import { Overview } from "@/pages/inventory/overview";
+import { Card, CardContent } from "@/components/ui/card";
+import { InventoryStats } from "@/pages/inventory/state";
+import { LayoutGrid, List } from "lucide-react";
+import { StockEntries } from "@/pages/inventory/stock-entry";
 import { ProductsTable } from "@/pages/inventory/product-table";
 import { StockMovements } from "@/pages/inventory/stock-movement";
-import { StockEntries } from "@/pages/inventory/stock-entry";
-import { InventoryStats } from "@/pages/inventory/state";
-import { InventorySearch } from "@/pages/inventory/search";
-import { Button } from "@/components/ui/button";
-import { PlusCircle, LayoutGrid, List } from "lucide-react";
-import Layout from "@/layout";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useDispatch, useSelector } from "react-redux";
+import { getProducts } from "@/contexts/reducer";
 
 const Inventory = () => {
+  const dispatch = useDispatch();
+  const { data: products } = useSelector((state) => state.products);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("overview");
   const [viewMode, setViewMode] = useState("grid");
+
+  useEffect(() => {
+    dispatch(getProducts({ param: { entry: true } }));
+  }, [dispatch]);
+
+  // console.log(products);
 
   return (
     <Layout>
       <div className='flex flex-col'>
         <div className='flex-1 space-y-4'>
-          <div className='flex flex-col md:flex-row md:items-center md:justify-between gap-4'>
-            <div>
-              <h2 className='text-lg font-semibold tracking-tight'>
-                Inventory Management
-              </h2>
-              <p className='text-sm text-muted-foreground mt-1'>
-                Manage your products, stock levels, and inventory movements
-              </p>
-            </div>
-            <div className='flex items-center gap-3'>
-              <InventorySearch onSearch={setSearchQuery} />
-              <Button>
-                <PlusCircle className='mr-2 h-4 w-4' />
-                Add Product
-              </Button>
-            </div>
-          </div>
-
-          <InventoryStats />
+          <InventoryStats products={products} />
 
           <div>
             <Tabs

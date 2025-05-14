@@ -1,8 +1,25 @@
 import { DollarSign, Package, AlertTriangle, BarChart3 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import React from "react";
+import PropTypes from "prop-types";
 
-export function InventoryStats() {
+export const InventoryStats = ({ products = {} }) => {
+  const totalProduct = Object.keys(products).length;
+  let totalEntryPrice = 0;
+  const uniqeCate = new Set(products.map((pro) => pro.categoryId));
+  const totalCategory = uniqeCate.size;
+
+  products.forEach((product) => {
+    if (product.entry && Array.isArray(product.entry)) {
+      product.entry.forEach((entry) => {
+        const price = parseFloat(entry.entryPrice?.trim());
+        if (!isNaN(price)) {
+          totalEntryPrice += price;
+        }
+      });
+    }
+  });
+  console.log(totalEntryPrice);
   return (
     <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
       <Card>
@@ -12,9 +29,9 @@ export function InventoryStats() {
               <p className='text-sm font-medium text-muted-foreground mb-1'>
                 Total Products
               </p>
-              <div className='text-lg font-semibold'>142</div>
+              <div className='text-lg font-semibold'>{totalProduct}</div>
               <p className='text-xs text-muted-foreground mt-1'>
-                Across 8 categories
+                Across {totalCategory} categories
               </p>
             </div>
             <div className='h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center'>
@@ -85,4 +102,8 @@ export function InventoryStats() {
       </Card>
     </div>
   );
-}
+};
+
+InventoryStats.propTypes = {
+  products: PropTypes.array,
+};
