@@ -17,6 +17,8 @@ import cityReduce from "./city-slice";
 import groupMessageReduce from "./group-message-slice";
 import roleReduce from "./role-slice";
 import clientCustomerReduce from "./client-cus-slice.jsx";
+import inventoryReduce from "./inventory-slice";
+import entryReduce from "./entry-slice";
 
 export default {
   user: userReduce,
@@ -38,4 +40,6 @@ export default {
   groupmessage: groupMessageReduce,
   roles: roleReduce,
   clientCus: clientCustomerReduce,
+  inventory: inventoryReduce,
+  entry: entryReduce,
 };

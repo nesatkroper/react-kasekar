@@ -12,6 +12,8 @@ import { getGroupMessages } from "./group-message-slice";
 import { getMe } from "./me-slice";
 import { getRoles } from "./role-slice";
 import { getClientCus } from "./client-cus-slice";
+import { getInventory } from "./inventory-slice";
+import { getProductEntry } from "./entry-slice";
 
 export {
   getCarts,
@@ -28,4 +30,6 @@ export {
   getMe,
   getRoles,
   getClientCus,
+  getInventory,
+  getProductEntry,
 };

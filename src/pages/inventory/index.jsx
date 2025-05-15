@@ -15,7 +15,7 @@ import { getProducts } from "@/contexts/reducer";
 const Inventory = () => {
   const dispatch = useDispatch();
   const { data: products } = useSelector((state) => state.products);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("overview");
   const [viewMode, setViewMode] = useState("grid");
 
@@ -94,37 +94,25 @@ const Inventory = () => {
 
               <TabsContent value='products' className='space-y-6 mt-6'>
                 <Card>
-                  <CardContent className='p-6'>
+                  <CardContent className='p-4'>
                     <h3 className='text-lg font-medium mb-4'>
                       Products Inventory
                     </h3>
-                    <p className='text-sm text-muted-foreground mb-6'>
-                      Manage your product catalog and stock levels
-                    </p>
+
                     <ProductsTable searchQuery={searchQuery} />
                   </CardContent>
                 </Card>
               </TabsContent>
 
               <TabsContent value='stock' className='space-y-6 mt-6'>
-                <Card>
-                  <CardContent className='p-6'>
-                    <h3 className='text-lg font-medium mb-4'>Stock Entries</h3>
-                    <p className='text-sm text-muted-foreground mb-6'>
-                      Track all stock additions and inventory updates
-                    </p>
-                    <StockEntries searchQuery={searchQuery} />
-                  </CardContent>
-                </Card>
+                <StockEntries />
               </TabsContent>
 
               <TabsContent value='movements'>
                 <Card>
                   <CardContent className='p-4'>
                     <h3 className='text-lg font-medium'>Stock Movements</h3>
-                    <p className='text-sm text-muted-foreground'>
-                      Track all product movements in and out of inventory
-                    </p>
+
                     <StockMovements searchQuery={searchQuery} />
                   </CardContent>
                 </Card>

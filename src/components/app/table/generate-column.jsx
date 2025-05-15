@@ -115,7 +115,7 @@ export const generateColumns = (
         );
       }
 
-      if (field.key === "dob" || field.key === "hiredDate") {
+      if (field.key === "dob" || field.key.includes("Date")) {
         const dateValue = row.original[field.key];
         if (!dateValue) return <div>N/A</div>;
         const date = new Date(dateValue);
