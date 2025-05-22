@@ -19,14 +19,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {
-  User,
-  Building2,
-  Mail,
-  FileText,
-  MapPin,
-  Bookmark,
-} from "lucide-react";
+import { User, Building2, FileText, MapPin, Bookmark } from "lucide-react";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -43,14 +36,15 @@ const Home = () => {
 
   useEffect(() => {
     dispatch(getClientCus({ id: user?.employeeId }));
-    dispatch(
-      getEmployees({
-        id: user?.employeeId,
-        params: { position: true, department: true },
-      })
-    );
+
+    if (user?.employeeId)
+      dispatch(
+        getEmployees({
+          id: user?.employeeId,
+          params: { position: true, department: true },
+        })
+      );
   }, [dispatch]);
-  console.log(clientCus);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -124,7 +118,8 @@ const Home = () => {
                   loading='lazy'
                 />
                 <AvatarFallback className='text-3xl bg-green-700'>
-                  {getInitials(empData[0]?.firstName, empData[0]?.lastName)}
+                  {getInitials(empData[0]?.firstName, empData[0]?.lastName) ||
+                    "Admin"}
                 </AvatarFallback>
               </Avatar>
               <div
@@ -136,21 +131,21 @@ const Home = () => {
             <div className='space-y-2 text-center md:text-left'>
               <div>
                 <h1 className='text-xl font-bold tracking-tight'>
-                  {empData[0]?.firstName} {empData[0]?.lastName}
+                  {empData[0]?.firstName} {empData[0]?.lastName || "Admin"}
                 </h1>
                 <p className='text-md text-white/80'>
-                  {empData[0]?.position?.positionName}
+                  {empData[0]?.position?.positionName || "Administrator"}
                 </p>
               </div>
 
               <div className='flex flex-wrap justify-center md:justify-start gap-2 h-6'>
                 <Badge className='bg-white/20 hover:bg-white/30 text-white border-none flex items-center gap-1 uppercase'>
                   <User className='h-3 w-3' />
-                  {empData[0]?.employeeCode}
+                  {empData[0]?.employeeCode || "Owner"}
                 </Badge>
                 <Badge className='bg-white/20 hover:bg-white/30 text-white border-none flex items-center gap-1 capitalize'>
                   <Building2 className='h-3 w-3' />
-                  {empData[0]?.department?.departmentName}
+                  {empData[0]?.department?.departmentName || "Super Admin"}
                 </Badge>
                 <Badge className='bg-white/20 hover:bg-white/30 text-white border-none flex items-center gap-1'>
                   <MapPin className='h-3 w-3' />
@@ -160,12 +155,6 @@ const Home = () => {
             </div>
 
             <div className='md:ml-auto flex md:flex-row gap-3 md:mt-0'>
-              <Button
-                variant='secondary'
-                className='bg-white/20 hover:bg-white/30 text-white border-none'>
-                <Mail className='mr-2 h-4 w-4' />
-                Message
-              </Button>
               <Button
                 variant='secondary'
                 className='bg-white/20 hover:bg-white/30 text-white border-none'>
@@ -202,7 +191,6 @@ const Home = () => {
                   <Progress
                     value={performanceValue}
                     className='h-2 bg-white/20'
-                    // indicatorClassName='bg-emerald-400'
                   />
                 </div>
               </div>
@@ -244,19 +232,19 @@ const Home = () => {
             </div>
           </div>
 
-          <TabsContent value='overview' className='space-y-6'>
+          <TabsContent value='overview' className='space-y-4'>
             <OverView empData={empData} />
           </TabsContent>
 
-          <TabsContent value='details' className='space-y-6'>
+          <TabsContent value='details' className='space-y-4'>
             <Details empData={empData} />
           </TabsContent>
 
-          <TabsContent value='attendance' className='space-y-6'>
+          <TabsContent value='attendance' className='space-y-4'>
             <Attendance empData={empData} />
           </TabsContent>
 
-          <TabsContent value='agent' className='space-y-6'>
+          <TabsContent value='agent' className='space-y-4'>
             <CustomerTabs customers={clientCus} />
           </TabsContent>
         </Tabs>
