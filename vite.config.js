@@ -1,11 +1,10 @@
 import path from "path";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
-import compression from "vite-plugin-compression";
 
 export default defineConfig({
   base: "/",
-  plugins: [react(), compression()],
+  plugins: [react()],
   optimizeDeps: {
     include: ["react-router-dom"],
   },

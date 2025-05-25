@@ -60,8 +60,7 @@ export function ThemeSwitcher() {
               onClick={() => changeTheme(t.name)}>
               <div
                 className={cn(
-                  "flex h-6 w-6 items-center justify-center rounded-full",
-                  "border border-input"
+                  "flex h-6 w-6 items-center justify-center rounded-full"
                 )}
                 style={{ backgroundColor: t.color }}>
                 {theme === t.name && <Check className='h-4 w-4 text-white' />}

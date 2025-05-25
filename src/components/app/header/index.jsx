@@ -94,23 +94,23 @@ const AppHeader = () => {
     };
   }, [isChatOpen, isNotificationOpen, i18n.language]);
 
-  const handleChatOpen = () => {
-    setIsChatOpen(true);
-    setChatcount(0);
-  };
+  // const handleChatOpen = () => {
+  //   setIsChatOpen(true);
+  //   setChatcount(0);
+  // };
 
-  const handleChatClose = () => {
-    setIsChatOpen(false);
-  };
+  // const handleChatClose = () => {
+  //   setIsChatOpen(false);
+  // };
 
-  const handleNotificationOpen = () => {
-    setIsNotificationOpen(true);
-    setNoticount(0);
-  };
+  // const handleNotificationOpen = () => {
+  //   setIsNotificationOpen(true);
+  //   setNoticount(0);
+  // };
 
-  const handleNotificationClose = () => {
-    setIsNotificationOpen(false);
-  };
+  // const handleNotificationClose = () => {
+  //   setIsNotificationOpen(false);
+  // };
 
   return (
     <header className='sticky top-0 z-10 bg-background flex h-12 items-center justify-between gap-2 px-4 border-b'>
@@ -139,7 +139,7 @@ const AppHeader = () => {
           <AppSearchBar />
         </Dialog>
 
-        <Sheet
+        {/* <Sheet
           onOpenChange={(open) =>
             open ? handleChatOpen() : handleChatClose()
           }>
@@ -155,9 +155,9 @@ const AppHeader = () => {
               )}
             </div>
           </SheetTrigger>
-        </Sheet>
+        </Sheet> */}
 
-        <Sheet
+        {/* <Sheet
           onOpenChange={(open) =>
             open ? handleNotificationOpen() : handleNotificationClose()
           }>
@@ -174,7 +174,7 @@ const AppHeader = () => {
               )}
             </div>
           </SheetTrigger>
-        </Sheet>
+        </Sheet> */}
 
         {isMobile ? (
           <UserNav />
@@ -182,7 +182,7 @@ const AppHeader = () => {
           <div className='flex gap-3'>
             <ThemeSwitcher />
             <ModeToggle />
-            <LanguageToggle />
+            {/* <LanguageToggle /> */}
           </div>
         )}
       </div>
