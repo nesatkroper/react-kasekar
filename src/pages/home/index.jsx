@@ -34,6 +34,8 @@ const Home = () => {
     return format(new Date(date), "PPP");
   };
 
+  console.log(user)
+
   useEffect(() => {
     dispatch(getClientCus({ id: user?.employeeId }));
 
@@ -61,9 +63,8 @@ const Home = () => {
   };
 
   const getInitials = (firstName, lastName) => {
-    return `${firstName?.charAt(0) || ""}${
-      lastName?.charAt(0) || ""
-    }`.toUpperCase();
+    return `${firstName?.charAt(0) || ""}${lastName?.charAt(0) || ""
+      }`.toUpperCase();
   };
 
   const calculateServiceDuration = (hiredDate) => {
@@ -75,11 +76,10 @@ const Home = () => {
     const diffMonths = now.getMonth() - hired.getMonth();
 
     if (diffYears > 0) {
-      return `${diffYears} year${diffYears > 1 ? "s" : ""}${
-        diffMonths > 0
+      return `${diffYears} year${diffYears > 1 ? "s" : ""}${diffMonths > 0
           ? `, ${diffMonths} month${diffMonths > 1 ? "s" : ""}`
           : ""
-      }`;
+        }`;
     }
 
     return `${diffMonths} month${diffMonths > 1 ? "s" : ""}`;

@@ -1,3 +1,5 @@
+
+
 import React, { useState } from "react";
 import TableLoading from "../utils/table-loading";
 import PropTypes from "prop-types";
@@ -109,9 +111,9 @@ const AppDataTable = ({
 
   const enhancedAddElement = React.isValidElement(addElement)
     ? React.cloneElement(addElement, {
-        onSuccess: () => setOpen(false),
-        onOpenChange: (isOpen) => setOpen(isOpen),
-      })
+      onSuccess: () => setOpen(false),
+      onOpenChange: (isOpen) => setOpen(isOpen),
+    })
     : null;
 
   const table = useReactTable({
@@ -243,27 +245,26 @@ const AppDataTable = ({
                       {headerGroup.headers?.map((header) => (
                         <TableHead
                           key={header.id}
-                          className={`font-bold px-1 ${
-                            header.id === "rowNumber"
+                          className={`font-bold px-1 ${header.id === "rowNumber"
                               ? "w-12 text-center"
                               : header.id === "info.picture"
-                              ? "w-32"
-                              : header.id === "picture"
-                              ? "max-w-44"
-                              : header.id === "status"
-                              ? "w-28"
-                              : header.id === "select"
-                              ? "w-8 text-center"
-                              : header.id === "actions"
-                              ? "w-10"
-                              : ""
-                          }`}>
+                                ? "w-32"
+                                : header.id === "picture"
+                                  ? "max-w-44"
+                                  : header.id === "status"
+                                    ? "w-28"
+                                    : header.id === "select"
+                                      ? "w-8 text-center"
+                                      : header.id === "actions"
+                                        ? "w-10"
+                                        : ""
+                            }`}>
                           {header.isPlaceholder
                             ? null
                             : flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                              )}
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
                         </TableHead>
                       ))}
                     </TableRow>
@@ -286,21 +287,20 @@ const AppDataTable = ({
                           {row.getVisibleCells()?.map((cell) => (
                             <TableCell
                               key={cell.id}
-                              className={`px-1 ${
-                                cell.column.id === "rowNumber"
+                              className={`px-1 ${cell.column.id === "rowNumber"
                                   ? "text-center"
                                   : cell.column.id === "info.picture"
-                                  ? "w-32"
-                                  : cell.column.id === "picture"
-                                  ? "max-w-44"
-                                  : cell.column.id === "status"
-                                  ? "w-28 text-center"
-                                  : cell.column.id === "select"
-                                  ? "w-8"
-                                  : cell.column.id === "actions"
-                                  ? "w-10"
-                                  : ""
-                              }`}>
+                                    ? "w-32"
+                                    : cell.column.id === "picture"
+                                      ? "max-w-44"
+                                      : cell.column.id === "status"
+                                        ? "w-28 text-center"
+                                        : cell.column.id === "select"
+                                          ? "w-8"
+                                          : cell.column.id === "actions"
+                                            ? "w-10"
+                                            : ""
+                                }`}>
                               {flexRender(
                                 cell.column.columnDef.cell,
                                 cell.getContext()

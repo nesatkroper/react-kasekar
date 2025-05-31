@@ -1,3 +1,8 @@
+
+
+
+
+
 import React, { useState } from "react";
 import axiosAuth from "@/lib/axios-auth";
 import AppDetailViewer from "./app-detail-viewer";
@@ -193,22 +198,22 @@ export const generateColumns = (
       const editComponent =
         typeof editComponentCreator === "function"
           ? React.cloneElement(
-              editComponentCreator(item, () => setIsDialogOpen(false)),
-              {
-                onSuccess: () => setIsDialogOpen(false),
-              }
-            )
+            editComponentCreator(item, () => setIsDialogOpen(false)),
+            {
+              onSuccess: () => setIsDialogOpen(false),
+            }
+          )
           : null;
 
       const handleDelete = async () => {
         try {
           status
             ? await axiosAuth.patch(
-                `/${model}/${item[`${model}Id`]}?type=remove`
-              )
+              `/${model}/${item[`${model}Id`]}?type=remove`
+            )
             : await axiosAuth.patch(
-                `/${model}/${item[`${model}Id`]}?type=restore`
-              );
+              `/${model}/${item[`${model}Id`]}?type=restore`
+            );
           showToast(
             status ? t("toast.remove") : t("toast.restore"),
             status ? "error" : "success"
