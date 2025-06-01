@@ -77,8 +77,8 @@ const Home = () => {
 
     if (diffYears > 0) {
       return `${diffYears} year${diffYears > 1 ? "s" : ""}${diffMonths > 0
-          ? `, ${diffMonths} month${diffMonths > 1 ? "s" : ""}`
-          : ""
+        ? `, ${diffMonths} month${diffMonths > 1 ? "s" : ""}`
+        : ""
         }`;
     }
 
